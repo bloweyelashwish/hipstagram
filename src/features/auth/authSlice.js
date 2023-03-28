@@ -19,11 +19,13 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem(STORAGE_PREFIX + "token");
       state.token = null;
+      state.user = null;
     },
   },
 });
 
-export const { setToken, logout } = authSlice.actions;
+export const { setToken, logout, setUser } = authSlice.actions;
 export const authReducer = authSlice.reducer;
 
 export const selectToken = (state) => state.auth.token;
+export const selectUser = (state) => state.auth.user;
