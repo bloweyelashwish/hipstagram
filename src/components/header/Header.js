@@ -1,17 +1,31 @@
 import { useSelector, useDispatch } from "react-redux";
-import { selectUser, logout } from "../../features/auth/authSlice";
+import {
+  selectUser,
+  logout,
+  selectAuthLoadingState,
+} from "../../features/auth/authSlice";
 
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { flushSync } from "react-dom";
+import { selectActiveRouteTitle } from "../../features/route/routeSlice";
 
 export const Header = () => {
+  const loadingState = useSelector(selectAuthLoadingState);
   const currentUser = useSelector(selectUser);
+  const activeRoute = useSelector(selectActiveRouteTitle);
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
     dispatch(logout());
   };
+
+  if (loadingState) {
+    return null;
+  }
+
+  console.log(currentUser);
 
   return (
     <Box
@@ -25,12 +39,16 @@ export const Header = () => {
       }}
     >
       <div>search input</div>
+      <Typography>{activeRoute}</Typography>
       <Box display={"flex"} alignItems={"center"} rowGap={1}>
-        <Link to={"/profile"}>
-          <IconButton>
+        <IconButton disabled={!currentUser}>
+          <NavLink
+            to={`/user/${currentUser?.login}`}
+            style={{ display: "flex" }}
+          >
             <PersonOutlined sx={{ color: "#fff", fontSize: "2rem" }} />
-          </IconButton>
-        </Link>
+          </NavLink>
+        </IconButton>
         <IconButton onClick={logoutHandler}>
           <LogoutOutlined sx={{ color: "#fff", fontSize: "1.75rem" }} />
         </IconButton>

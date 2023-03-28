@@ -1,10 +1,9 @@
 import { Box, TextField, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate, Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Link, Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../features/auth/authApiService";
-import { selectToken, setToken } from "../../features/auth/authSlice";
-import { store } from "../../app/store";
+import { setToken } from "../../features/auth/authSlice";
 import { STORAGE_PREFIX } from "../../globals";
 
 export const Login = () => {
@@ -15,7 +14,6 @@ export const Login = () => {
   } = useForm();
   const [loginHook, meta] = useLoginMutation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isSuccess, isError, error } = meta;
 
   async function onSubmit(data) {

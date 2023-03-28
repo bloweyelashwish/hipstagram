@@ -7,18 +7,6 @@ import { setUser } from "../../features/auth/authSlice";
 import { Header } from "../header/Header";
 
 export const AppLayout = () => {
-  const { data, isLoading } = useCurrentUserQuery();
-  const dispatch = useDispatch();
-
-  if (isLoading) {
-    // show full screen loader
-    <p>Loader...</p>;
-  }
-
-  useEffect(() => {
-    dispatch(setUser({ user: data }));
-  }, [data, dispatch]);
-
   return (
     <Box>
       <Container maxWidth={"lg"}>

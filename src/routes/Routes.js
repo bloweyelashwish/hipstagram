@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PrivateRoutes, PublicRoutes } from "../routes";
-import { Profile } from "../pages/private/";
+import { User, Feed } from "../pages/private/";
 import { Login, Registration } from "../pages/authentication";
 
 export const AppRoutes = () => {
@@ -8,8 +8,8 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<PrivateRoutes />}>
         <Route path="/" element={<Navigate to="feed" replace />} />
-        <Route path="feed" index element={<p>Feed</p>} />
-        <Route path="profile/:username" element={<Profile />} />
+        <Route path="feed" index element={<Feed />} />
+        <Route path="user/:username" element={<User />} />
       </Route>
       <Route path="/" element={<PublicRoutes />}>
         <Route path="login" element={<Login />} />
