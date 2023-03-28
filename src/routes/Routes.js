@@ -1,12 +1,26 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { PrivateRoute } from "../routes";
-import { AuthenticationLayout } from "../components/layout/authentication";
+import { PrivateRoutes, PublicRoutes } from "../routes";
+import { Profile } from "../pages/private/";
 import { Login, Registration } from "../pages/authentication";
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route
+      <Route path="/" element={<PrivateRoutes />}>
+        <Route path="/" element={<Navigate to="feed" replace />} />
+        <Route path="feed" index element={<p>Feed</p>} />
+        <Route path="profile/:username" element={<Profile />} />
+      </Route>
+      <Route path="/" element={<PublicRoutes />}>
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Registration />} />
+      </Route>
+    </Routes>
+  );
+};
+
+/*
+ <Route
         path="/feed"
         element={
           <PrivateRoute>
@@ -30,6 +44,4 @@ export const AppRoutes = () => {
           </AuthenticationLayout>
         }
       />
-    </Routes>
-  );
-};
+*/

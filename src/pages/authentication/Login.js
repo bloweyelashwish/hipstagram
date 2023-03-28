@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../../features/auth/authApiService";
 import { selectToken, setToken } from "../../features/auth/authSlice";
 import { store } from "../../app/store";
+import { STORAGE_PREFIX } from "../../globals";
 
 export const Login = () => {
   const {
@@ -20,9 +21,8 @@ export const Login = () => {
   async function onSubmit(data) {
     const user = await loginHook(data);
     if (user.data?.access_token) {
-      console.log(user.data?.access_token);
-      dispatch(setToken({ accessToken: user.data?.access_token }));
-      console.log(store.getState());
+      dispatch(setToken({ accessToken: user.data.access_token }));
+      localStorage.setItem(STORAGE_PREFIX + "token", user.data.access_token);
     }
   }
 

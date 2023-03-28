@@ -13,7 +13,6 @@ export const Registration = () => {
   const [registrationHook, meta] = useRegistrationMutation();
   const { isError, error, isSuccess } = meta;
 
-  console.log(meta);
   async function onSubmit(data) {
     const { confirmationPassword, ...requiredData } = data;
     await registrationHook(requiredData);

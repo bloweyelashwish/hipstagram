@@ -4,10 +4,8 @@ import { theme } from "./contexts/theme";
 
 import "./App.css";
 import { AppRoutes } from "./routes/Routes";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useCurrentUserQuery } from "./features/users/usersApiService";
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
@@ -15,6 +13,6 @@ function App() {
       </div>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

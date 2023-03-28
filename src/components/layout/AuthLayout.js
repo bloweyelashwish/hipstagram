@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { Container, Box, TextField, Button, Grid } from "@mui/material";
-import authBg from "../../../assets/bg.svg";
+import authBg from "../../assets/bg.svg";
 
-export const AuthenticationLayout = ({ children }) => {
+export const AuthLayout = ({ children }) => {
   return (
     <Container component={"main"}>
       <Box display={"flex"} justifyContent={"space-between"}>
