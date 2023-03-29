@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useGetUserByIdQuery } from "../../features/users/usersApiService";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+
 import { Box, Container } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
-import { useCurrentUserQuery } from "../../features/auth/authApiService";
-import { setUser } from "../../features/auth/authSlice";
 import { Header } from "../header/Header";
 
 export const AppLayout = () => {

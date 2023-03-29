@@ -8,12 +8,10 @@ import {
 import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
-import { selectActiveRouteTitle } from "../../features/route/routeSlice";
 
 export const Header = () => {
   const loadingState = useSelector(selectAuthLoadingState);
   const currentUser = useSelector(selectUser);
-  const activeRoute = useSelector(selectActiveRouteTitle);
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
@@ -36,7 +34,7 @@ export const Header = () => {
     >
       <div>search input</div>
       <Typography sx={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>
-        {activeRoute}
+        Hipstagram
       </Typography>
       <Box display={"flex"} alignItems={"center"} rowGap={1}>
         <IconButton>

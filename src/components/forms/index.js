@@ -1,1 +1,1 @@
-export * from "./PostUpload";
+export * from "../../features/posts/PostUpload";

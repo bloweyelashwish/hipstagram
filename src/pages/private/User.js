@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../../features/auth/authSlice";
-import { setActiveRouteTitle } from "../../features/route/routeSlice";
+import { useUploadPostMutation } from "../../features/posts/postsApiSlice";
+import { useGetUserByIdQuery } from "../../features/users/usersApiService";
 
 import {
   Avatar,
@@ -10,10 +11,15 @@ import {
   Typography,
   Stack,
   Button,
+  Grid,
+  IconButton,
 } from "@mui/material";
-import { SettingsOutlined } from "@mui/icons-material";
-import { useGetUserByIdQuery } from "../../features/users/usersApiService";
-import { PostUpload } from "../../components/forms/PostUpload/PostUpload";
+import {
+  SettingsOutlined,
+  SentimentDissatisfiedOutlined,
+} from "@mui/icons-material";
+import { PostUpload } from "../../features/posts/PostUpload";
+import { Post } from "../../features/posts/Post";
 
 export const User = () => {
   const params = useParams();
@@ -22,6 +28,7 @@ export const User = () => {
   const { data, isLoading, isError, isSuccess } = useGetUserByIdQuery(
     params.id
   );
+  const [uploadPost, result] = useUploadPostMutation();
 
   if (isLoading) {
     return (
@@ -35,29 +42,50 @@ export const User = () => {
     );
   }
 
-  if (isSuccess) {
-    dispatch(setActiveRouteTitle(data.login));
-  }
+  const { posts, followersCount, followingsCount, login } = data;
 
-  const { posts, followersCount, followingsCount } = data;
+  const newPostHandler = (postDTO) => {
+    uploadPost(postDTO);
+  };
+  console.log(posts);
 
   return (
     <Box>
       <Box sx={{ borderBottom: "1px solid #D9D9D9" }} padding={"38px 0"}>
         <Box display={"flex"} columnGap={10}>
-          <Avatar sx={{ height: "150px", width: "150px" }} flexShrink={0} />
-
+          <Avatar sx={{ height: "150px", width: "150px", flexShrink: 0 }} />
           <Box
             display={"flex"}
             flexDirection="column"
             alignItems={"center"}
             justifyContent={"space-evenly"}
+            padding={"10px"}
             flexGrow={1}
           >
             <Box
+              width={"100%"}
+              display="flex"
+              alignItems="center"
+              columnGap={3}
+            >
+              <Typography variant="h4" component="h1">
+                {login}
+              </Typography>
+              {isOwnPage && (
+                <IconButton
+                  sx={{
+                    fontSize: "18px",
+                  }}
+                >
+                  <SettingsOutlined />
+                </IconButton>
+              )}
+            </Box>
+            <Box
               display={"flex"}
               alignItems={"center"}
-              justifyContent={"space-evenly"}
+              justifyContent={"flex-start"}
+              columnGap={10}
               width={"100%"}
             >
               <Typography
@@ -85,28 +113,6 @@ export const User = () => {
                 {followingsCount} followings
               </Typography>
             </Box>
-            {isOwnPage && (
-              <Box width={"100%"} mt={"30px"}>
-                <Button
-                  sx={{
-                    fontSize: "24px",
-                    display: "flex",
-                    alignItem: "center",
-                    columnGap: "5px",
-                    width: "100%",
-                    backgroundColor: "grey",
-                    color: "white",
-                    borderRadius: "5px",
-                    "&:hover": {
-                      opacity: "0.7",
-                      backgroundColor: "grey",
-                    },
-                  }}
-                >
-                  Go to settings <SettingsOutlined />
-                </Button>
-              </Box>
-            )}
             {!isOwnPage && (
               <Box width={"100%"} mt={"30px"}>
                 <Button
@@ -133,13 +139,38 @@ export const User = () => {
         {isOwnPage && !posts.length && (
           <Box height={"100%"}>
             <Typography variant="h4" component="h2" textAlign={"center"}>
-              No posts yes ?
+              No posts yet?
             </Typography>
             <Typography variant="subtitle1" textAlign={"center"}>
               Upload your first post here
             </Typography>
-            <PostUpload />
+            <PostUpload onAddedPost={newPostHandler} />
           </Box>
+        )}
+        {!isOwnPage && !posts.length && (
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="h4" component="h2" textAlign={"center"}>
+              No posts
+            </Typography>
+            <SentimentDissatisfiedOutlined sx={{ fontSize: "3rem" }} />
+          </Box>
+        )}
+        {!!posts.length && (
+          <Grid container spacing={2} columns={{ xs: 12 }}>
+            {posts.map((post) => {
+              console.log(post);
+              return (
+                <Grid item xs={6}>
+                  <Post {...post} />
+                </Grid>
+              );
+            })}
+          </Grid>
         )}
       </Box>
     </Box>

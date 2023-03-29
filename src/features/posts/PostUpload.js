@@ -3,10 +3,11 @@ import { CameraAltOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-export const PostUpload = () => {
+export const PostUpload = ({ onAddedPost }) => {
   const [isActive, setIsActive] = useState(false);
   const { register, handleSubmit } = useForm();
   const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   function handleFileUpload(file) {
     const reader = new FileReader();
@@ -14,6 +15,7 @@ export const PostUpload = () => {
     reader.addEventListener("load", ({ target }) => {
       setIsActive(true);
       setImage(target.result);
+      setImageFile(file);
     });
   }
 
@@ -23,18 +25,17 @@ export const PostUpload = () => {
   };
 
   function onSubmit(data) {
-    const { image: imageList, title } = data;
-    const parsedData = {
-      image: imageList[0],
-      title,
-    };
+    const DTO = new FormData();
+    DTO.set("title", data.title);
+    DTO.set("image", imageFile);
+
+    onAddedPost(DTO);
   }
 
   return (
     <Box mt={"20px"}>
       <IconButton size="large" component="label">
         <input
-          {...register("image")}
           type="file"
           hidden
           onChange={postUploadHandler}
