@@ -1,5 +1,4 @@
-import { Outlet } from "react-router-dom";
-import { Container, Box, TextField, Button, Grid } from "@mui/material";
+import { Container, Box } from "@mui/material";
 import authBg from "../../assets/bg.svg";
 
 export const AuthLayout = ({ children }) => {

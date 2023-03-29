@@ -5,9 +5,6 @@
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/header/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/usersApiService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/usersApiService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/private/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/private/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" />
@@ -85,7 +82,7 @@
       <workItem from="1679934532867" duration="14260000" />
       <workItem from="1679982261145" duration="935000" />
       <workItem from="1679999408634" duration="29000" />
-      <workItem from="1680092559028" duration="222000" />
+      <workItem from="1680092559028" duration="795000" />
     </task>
     <servers />
   </component>

@@ -10,6 +10,7 @@ export const AppRoutes = () => {
         <Route path="/" element={<Navigate to="feed" replace />} />
         <Route path="feed" index element={<Feed />} />
         <Route path="user/:id" element={<User />} />
+        <Route path="settings" element={<p>Settings</p>} />
       </Route>
       <Route path="/" element={<PublicRoutes />}>
         <Route path="login" element={<Login />} />
@@ -18,30 +19,3 @@ export const AppRoutes = () => {
     </Routes>
   );
 };
-
-/*
- <Route
-        path="/feed"
-        element={
-          <PrivateRoute>
-            <p>Feed</p>
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <AuthenticationLayout>
-            <Login />
-          </AuthenticationLayout>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <AuthenticationLayout>
-            <Registration />
-          </AuthenticationLayout>
-        }
-      />
-*/

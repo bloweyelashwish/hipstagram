@@ -8,9 +8,12 @@ import { Header } from "../header/Header";
 
 export const AppLayout = () => {
   return (
-    <Box>
-      <Container maxWidth={"lg"}>
-        <Header />
+    <Box sx={{ backgroundColor: "#F3F2F2", minHeight: "100vh" }}>
+      <Header />
+      <Container
+        maxWidth={"lg"}
+        sx={{ backgroundColor: "#FFF", height: "100vh" }}
+      >
         <Container>
           <Outlet />
         </Container>

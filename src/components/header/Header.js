@@ -5,7 +5,7 @@ import {
   selectAuthLoadingState,
 } from "../../features/auth/authSlice";
 
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import { selectActiveRouteTitle } from "../../features/route/routeSlice";
@@ -20,12 +20,6 @@ export const Header = () => {
     dispatch(logout());
   };
 
-  if (loadingState) {
-    return null;
-  }
-
-  console.log(currentUser);
-
   return (
     <Box
       component={"header"}
@@ -35,18 +29,27 @@ export const Header = () => {
       padding={"0.75rem"}
       sx={{
         backgroundColor: "#4D88ED",
+        position: "sticky",
+        zIndex: 5,
+        top: 0,
       }}
     >
       <div>search input</div>
-      <Typography>{activeRoute}</Typography>
+      <Typography sx={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>
+        {activeRoute}
+      </Typography>
       <Box display={"flex"} alignItems={"center"} rowGap={1}>
         <IconButton>
-          <NavLink
-            to={`/user/${currentUser?.login}`}
-            style={{ display: "flex" }}
-          >
-            <PersonOutlined sx={{ color: "#fff", fontSize: "2rem" }} />
-          </NavLink>
+          {loadingState ? (
+            <Skeleton variant="circular" fontSize="1.75rem" />
+          ) : (
+            <NavLink
+              to={`/user/${currentUser?.id}`}
+              style={{ display: "flex" }}
+            >
+              <PersonOutlined sx={{ color: "#fff", fontSize: "2rem" }} />
+            </NavLink>
+          )}
         </IconButton>
         <IconButton onClick={logoutHandler}>
           <LogoutOutlined sx={{ color: "#fff", fontSize: "1.75rem" }} />

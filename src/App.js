@@ -7,6 +7,7 @@ import { theme } from "./contexts/theme";
 import "./App.css";
 import { AppRoutes } from "./routes/Routes";
 import { setUser, logout, setLoadingState } from "./features/auth/authSlice";
+import { Loader } from "./components/ui/Loader/Loader";
 
 const App = () => {
   const { data, isLoading, isSuccess, isError } = useCurrentUserQuery();
@@ -29,7 +30,7 @@ const App = () => {
   }, [data, dispatch, isError, isLoading, isSuccess]);
 
   if (isLoading) {
-    return <p>Loader...</p>;
+    return <Loader />;
   }
 
   return (
