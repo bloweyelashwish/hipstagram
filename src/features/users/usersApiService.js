@@ -6,6 +6,7 @@ const usersApiService = apiService.injectEndpoints({
       query: (id) => ({
         url: `/users/${id}`,
         method: "GET",
+        providesTags: ["User"],
       }),
     }),
   }),

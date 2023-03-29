@@ -2,12 +2,14 @@ import { Box, IconButton, Dialog, TextField, Button } from "@mui/material";
 import { CameraAltOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useUploadPostMutation } from "./postsApiSlice";
 
-export const PostUpload = ({ onAddedPost }) => {
+export const PostUpload = ({ onUpload, ...props }) => {
   const [isActive, setIsActive] = useState(false);
   const { register, handleSubmit } = useForm();
   const [image, setImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [uploadPost, result] = useUploadPostMutation();
 
   function handleFileUpload(file) {
     const reader = new FileReader();
@@ -29,19 +31,24 @@ export const PostUpload = ({ onAddedPost }) => {
     DTO.set("title", data.title);
     DTO.set("image", imageFile);
 
-    onAddedPost(DTO);
+    uploadPost(DTO)
+      .unwrap()
+      .then(() => {
+        onUpload();
+      });
+    setIsActive((prev) => !prev);
   }
 
   return (
-    <Box mt={"20px"}>
-      <IconButton size="large" component="label">
+    <Box>
+      <IconButton size={"large"} component="label">
         <input
           type="file"
           hidden
           onChange={postUploadHandler}
           accept="image/*"
         />
-        <CameraAltOutlined sx={{ fontSize: "3rem" }} />
+        <CameraAltOutlined sx={{ fontSize: "2rem" }} {...props} />
       </IconButton>
       <Dialog open={isActive} onClose={() => setIsActive(false)}>
         <Box

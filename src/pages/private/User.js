@@ -25,10 +25,9 @@ export const User = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const isOwnPage = useSelector(selectUser)?.id === params.id;
-  const { data, isLoading, isError, isSuccess } = useGetUserByIdQuery(
+  const { data, isLoading, isError, isSuccess, refetch } = useGetUserByIdQuery(
     params.id
   );
-  const [uploadPost, result] = useUploadPostMutation();
 
   if (isLoading) {
     return (
@@ -42,12 +41,11 @@ export const User = () => {
     );
   }
 
-  const { posts, followersCount, followingsCount, login } = data;
+  if (isError) {
+    return <p>Error</p>;
+  }
 
-  const newPostHandler = (postDTO) => {
-    uploadPost(postDTO);
-  };
-  console.log(posts);
+  const { posts, followersCount, followingsCount, login } = data;
 
   return (
     <Box>
@@ -62,23 +60,21 @@ export const User = () => {
             padding={"10px"}
             flexGrow={1}
           >
-            <Box
-              width={"100%"}
-              display="flex"
-              alignItems="center"
-              columnGap={3}
-            >
-              <Typography variant="h4" component="h1">
+            <Box width={"100%"} display="flex" alignItems="center">
+              <Typography variant="h4" component="h1" mr={"1.5rem"}>
                 {login}
               </Typography>
               {isOwnPage && (
-                <IconButton
-                  sx={{
-                    fontSize: "18px",
-                  }}
-                >
-                  <SettingsOutlined />
-                </IconButton>
+                <>
+                  <IconButton>
+                    <SettingsOutlined
+                      sx={{
+                        fontSize: "1.8rem",
+                      }}
+                    />
+                  </IconButton>
+                  <PostUpload sx={{ fontSize: "1.8rem" }} onUpload={refetch} />
+                </>
               )}
             </Box>
             <Box
@@ -141,10 +137,10 @@ export const User = () => {
             <Typography variant="h4" component="h2" textAlign={"center"}>
               No posts yet?
             </Typography>
-            <Typography variant="subtitle1" textAlign={"center"}>
+            <Typography mb={"20px"} variant="subtitle1" textAlign={"center"}>
               Upload your first post here
             </Typography>
-            <PostUpload onAddedPost={newPostHandler} />
+            <PostUpload onUpload={refetch} />
           </Box>
         )}
         {!isOwnPage && !posts.length && (
@@ -163,10 +159,9 @@ export const User = () => {
         {!!posts.length && (
           <Grid container spacing={2} columns={{ xs: 12 }}>
             {posts.map((post) => {
-              console.log(post);
               return (
                 <Grid item xs={6}>
-                  <Post {...post} />
+                  <Post {...post} key={post._id} />
                 </Grid>
               );
             })}

@@ -15,5 +15,6 @@ export const apiService = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Post", "User", "Feed"],
   endpoints: () => ({}),
 });

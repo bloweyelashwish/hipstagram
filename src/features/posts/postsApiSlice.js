@@ -7,12 +7,14 @@ const postsApiSlice = apiService.injectEndpoints({
         url: "/posts",
         method: "POST",
         body: postData,
+        invalidatesTags: ["Post", "User"],
       }),
     }),
     getPostById: build.query({
       query: (id) => ({
         url: `/posts/${id}`,
         method: "GET",
+        providesTags: ["Post"],
       }),
     }),
   }),
