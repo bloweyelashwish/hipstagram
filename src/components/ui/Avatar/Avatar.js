@@ -9,7 +9,11 @@ export const Avatar = ({ src, ...props }) => {
       justifyContent={"center"}
       {...props}
     >
-      {src ? <img src={src} alt={"Avatar"} /> : <AccountCircleRounded />}
+      {!!src ? (
+        <img src={src} alt={"Avatar"} />
+      ) : (
+        <AccountCircleRounded sx={{ height: "100%", width: "100%" }} />
+      )}
     </Box>
   );
 };

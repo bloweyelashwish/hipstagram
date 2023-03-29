@@ -34,7 +34,12 @@ export const Header = () => {
     >
       <div>search input</div>
       <Typography sx={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>
-        Hipstagram
+        <NavLink
+          to={`/feed`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Hipstagram
+        </NavLink>
       </Typography>
       <Box display={"flex"} alignItems={"center"} rowGap={1}>
         <IconButton>

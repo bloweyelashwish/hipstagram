@@ -9,11 +9,18 @@ import { Header } from "../header/Header";
 
 export const AppLayout = () => {
   return (
-    <Box sx={{ backgroundColor: "#F3F2F2", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        backgroundColor: "#F3F2F2",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Header />
       <Container
+        component="main"
         maxWidth={"lg"}
-        sx={{ backgroundColor: "#FFF", height: "100vh" }}
+        sx={{ backgroundColor: "#FFF", flexGrow: 1 }}
       >
         <Container>
           <Outlet />

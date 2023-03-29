@@ -17,7 +17,15 @@ const postsApiSlice = apiService.injectEndpoints({
         providesTags: ["Post"],
       }),
     }),
+    getFeed: build.query({
+      query: () => ({
+        url: "/posts/feed",
+        method: "GET",
+        providesTags: ["Post"],
+      }),
+    }),
   }),
 });
 
-export const { useUploadPostMutation, useGetPostByIdQuery } = postsApiSlice;
+export const { useUploadPostMutation, useGetPostByIdQuery, useGetFeedQuery } =
+  postsApiSlice;
