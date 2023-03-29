@@ -2,11 +2,13 @@ import { apiService } from "../../app/api/apiService";
 
 const usersApiService = apiService.injectEndpoints({
   endpoints: (build) => ({
-    currentUser: build.query({
-      query: () => "users/current",
+    userById: build.query({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "GET",
+      }),
     }),
   }),
 });
 
-export const { useCurrentUserQuery } = usersApiService;
-console.log(useCurrentUserQuery);
+export const { getUserByIdQuery } = usersApiService;

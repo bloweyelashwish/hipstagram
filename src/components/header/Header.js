@@ -8,7 +8,6 @@ import {
 import { Box, IconButton, Typography } from "@mui/material";
 import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
-import { flushSync } from "react-dom";
 import { selectActiveRouteTitle } from "../../features/route/routeSlice";
 
 export const Header = () => {
@@ -41,7 +40,7 @@ export const Header = () => {
       <div>search input</div>
       <Typography>{activeRoute}</Typography>
       <Box display={"flex"} alignItems={"center"} rowGap={1}>
-        <IconButton disabled={!currentUser}>
+        <IconButton>
           <NavLink
             to={`/user/${currentUser?.login}`}
             style={{ display: "flex" }}

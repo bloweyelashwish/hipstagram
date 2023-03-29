@@ -9,7 +9,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<PrivateRoutes />}>
         <Route path="/" element={<Navigate to="feed" replace />} />
         <Route path="feed" index element={<Feed />} />
-        <Route path="user/:username" element={<User />} />
+        <Route path="user/:id" element={<User />} />
       </Route>
       <Route path="/" element={<PublicRoutes />}>
         <Route path="login" element={<Login />} />
