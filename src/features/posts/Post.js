@@ -20,9 +20,10 @@ import {
   InputBase,
   Skeleton,
   Typography,
+  Avatar,
 } from "@mui/material";
 import { FavoriteBorderOutlined, FavoriteRounded } from "@mui/icons-material";
-import { Avatar } from "../../components/ui/Avatar/Avatar";
+import { CommentsList } from "../comments/CommentsList";
 
 const PostModal = ({ post, onLike }) => {
   const {
@@ -122,7 +123,9 @@ const PostModal = ({ post, onLike }) => {
             sx={{ height: "50px", width: "50px" }}
             mr={"15px"}
           />
-          <Typography sx={{ fontSize: "14px", paddingInline: "5px" }}>
+          <Typography
+            sx={{ fontSize: "1rem", paddingInline: "15px", color: "#000" }}
+          >
             {login}
           </Typography>
           {currentUser.id !== post.ownerId && !isFollowed && (
@@ -143,14 +146,27 @@ const PostModal = ({ post, onLike }) => {
           maxHeight={"100% - 85px"}
           sx={{
             overflowY: "auto",
+            overflowX: "hidden",
             display: "flex",
             flexDirection: "column-reverse",
           }}
         >
-          <p>Comment</p>
-          <p>Comment</p>
-          <p>Comment</p>
-          <p>Comment</p>
+          {commentsData.length ? (
+            <CommentsList list={commentsData} />
+          ) : (
+            <Typography
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                padding: "0.45rem",
+                color: "gray",
+              }}
+            >
+              Be the first to comment
+            </Typography>
+          )}
         </Box>
         <Box position={"relative"} bottom={0}>
           <Box

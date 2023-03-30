@@ -19,7 +19,7 @@ const usersApiService = apiService.injectEndpoints({
     followUser: build.mutation({
       query: (id) => ({
         url: `/users/follow/${id}`,
-        method: "POST",
+        method: "GET",
         providesTags: ["User"],
       }),
     }),
