@@ -9,7 +9,7 @@ export const PostUpload = ({ onUpload, ...props }) => {
   const { register, handleSubmit } = useForm();
   const [image, setImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [uploadPost, result] = useUploadPostMutation();
+  const [uploadPost] = useUploadPostMutation();
 
   function handleFileUpload(file) {
     const reader = new FileReader();

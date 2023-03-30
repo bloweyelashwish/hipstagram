@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../features/auth/authSlice";
 import {
   useFollowUserMutation,
@@ -26,6 +26,7 @@ import { Post } from "../../features/posts/Post";
 
 export const User = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const currentUserId = useSelector(selectUser)?.id;
   const isOwnPage = currentUserId === params.id;
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
@@ -54,7 +55,8 @@ export const User = () => {
   if (isError) {
     throw new Error(`${error?.message}`);
   }
-  if (followersError) {
+
+  if (followersHaveError) {
     throw new Error(`${followersError.message}`);
   }
 
@@ -92,7 +94,7 @@ export const User = () => {
               </Typography>
               {isOwnPage && (
                 <>
-                  <IconButton>
+                  <IconButton onClick={() => navigate(`/user/settings`)}>
                     <SettingsOutlined
                       sx={{
                         fontSize: "1.8rem",
