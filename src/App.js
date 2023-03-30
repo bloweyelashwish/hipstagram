@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { useCurrentUserQuery } from "./features/auth/authApiService";
+import { useCurrentUserQuery } from "./features/users/usersApiSlice";
 import { useDispatch } from "react-redux";
 import { theme } from "./contexts/theme";
 

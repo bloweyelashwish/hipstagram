@@ -70,7 +70,7 @@ export const User = () => {
   async function handleFollowButtonClick() {
     await follow(id).then(() => refetch());
   }
-  console.log(isFollowed);
+
   return (
     <Box>
       <Box sx={{ borderBottom: "1px solid #D9D9D9" }} padding={"38px 0"}>

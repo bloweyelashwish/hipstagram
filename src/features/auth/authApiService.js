@@ -2,12 +2,6 @@ import { apiService } from "../../app/api/apiService";
 
 const authApiSlice = apiService.injectEndpoints({
   endpoints: (build) => ({
-    currentUser: build.query({
-      query: () => ({
-        url: "/users/current",
-        method: "GET",
-      }),
-    }),
     login: build.mutation({
       query: (creds) => ({
         url: "/auth/login",
@@ -25,8 +19,4 @@ const authApiSlice = apiService.injectEndpoints({
   }),
 });
 
-export const {
-  useLoginMutation,
-  useRegistrationMutation,
-  useCurrentUserQuery,
-} = authApiSlice;
+export const { useLoginMutation, useRegistrationMutation } = authApiSlice;

@@ -30,6 +30,19 @@ const usersApiService = apiService.injectEndpoints({
         providesTags: ["User"],
       }),
     }),
+    updateCurrentUser: build.mutation({
+      query: (data) => ({
+        url: "/users/current",
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    currentUser: build.query({
+      query: () => ({
+        url: "/users/current",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -38,4 +51,6 @@ export const {
   useGetUsersByLoginQuery,
   useFollowUserMutation,
   useGetFollowersAndFollowingsQuery,
+  useUpdateCurrentUserMutation,
+  useCurrentUserQuery,
 } = usersApiService;

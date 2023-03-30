@@ -1,5 +1,4 @@
 import { Box, ListItem, Typography, List } from "@mui/material";
-import { useSelector } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
