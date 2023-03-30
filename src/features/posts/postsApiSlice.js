@@ -24,8 +24,18 @@ const postsApiSlice = apiService.injectEndpoints({
         providesTags: ["Post"],
       }),
     }),
+    likePost: build.mutation({
+      query: (id) => ({
+        url: `/posts/like/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useUploadPostMutation, useGetPostByIdQuery, useGetFeedQuery } =
-  postsApiSlice;
+export const {
+  useUploadPostMutation,
+  useGetPostByIdQuery,
+  useGetFeedQuery,
+  useLikePostMutation,
+} = postsApiSlice;

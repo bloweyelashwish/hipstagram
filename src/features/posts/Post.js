@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useGetPostByIdQuery } from "./postsApiSlice";
-import { useGetUserByIdQuery } from "../users/usersApiSlice";
+import { useGetPostByIdQuery, useLikePostMutation } from "./postsApiSlice";
+import {
+  useGetFollowersAndFollowingsQuery,
+  useGetUserByIdQuery,
+} from "../users/usersApiSlice";
 import {
   useGetCommentsByPostIdQuery,
   useCreateCommentMutation,
@@ -13,13 +16,15 @@ import {
   Box,
   Button,
   Dialog,
+  IconButton,
   InputBase,
   Skeleton,
   Typography,
 } from "@mui/material";
+import { FavoriteBorderOutlined, FavoriteRounded } from "@mui/icons-material";
 import { Avatar } from "../../components/ui/Avatar/Avatar";
 
-const PostModal = ({ post }) => {
+const PostModal = ({ post, onLike }) => {
   const {
     data: userData,
     isLoading: userLoading,
@@ -33,9 +38,15 @@ const PostModal = ({ post }) => {
     isError: commentsHaveError,
     refetch: refetchComments,
   } = useGetCommentsByPostIdQuery(post._id);
-  //  not working
-  const [createComment, result] = useCreateCommentMutation();
-  const { register, handleSubmit } = useForm();
+  const {
+    data: followersData,
+    isLoading: followersLoading,
+    error: followersError,
+    isError: followersHaveError,
+  } = useGetFollowersAndFollowingsQuery(post.ownerId);
+
+  const [createComment] = useCreateCommentMutation();
+  const { register, handleSubmit, reset } = useForm();
 
   const currentUser = useSelector(selectUser);
 
@@ -51,14 +62,39 @@ const PostModal = ({ post }) => {
     throw new Error(`${commentsError?.message}`);
   }
 
+  if (followersHaveError) {
+    throw new Error(`${followersError?.message}`);
+  }
+
   const newCommentHandler = async (data) => {
     await createComment({ text: data.text, postId: post._id }).then(() =>
       refetchComments()
     );
+    reset();
   };
 
   const { login, avatar } = userData;
-  console.log(commentsData);
+  const { followers } = followersData;
+  const isFollowed = followers.find(
+    (follower) => follower.id === currentUser.id
+  );
+
+  const { likes } = post;
+  const isLiked = !!likes.find((like) => like._id === currentUser.id);
+
+  function getLikesString() {
+    if (likes.length >= 3) {
+      return `Liked by ${likes[0].login}, ${likes[1].login}, and ${
+        likes.length - 2
+      } others...`;
+    }
+
+    if (likes.length === 2) {
+      return `Liked by ${likes[0].login} and ${likes[1].login}`;
+    }
+
+    return `Liked by ${likes[0].login}`;
+  }
 
   return (
     <Box display={"flex"}>
@@ -89,7 +125,7 @@ const PostModal = ({ post }) => {
           <Typography sx={{ fontSize: "14px", paddingInline: "5px" }}>
             {login}
           </Typography>
-          {currentUser.id !== post.ownerId && (
+          {currentUser.id !== post.ownerId && !isFollowed && (
             <Button
               sx={{
                 fontSize: "14px",
@@ -116,26 +152,49 @@ const PostModal = ({ post }) => {
           <p>Comment</p>
           <p>Comment</p>
         </Box>
-        <Box
-          position={"relative"}
-          bottom={0}
-          padding={"10px"}
-          component={"form"}
-          display={"flex"}
-          alignItems={"center"}
-          onSubmit={handleSubmit(newCommentHandler)}
-          sx={{ borderTop: "1px solid #D5D5D5" }}
-        >
-          <InputBase
-            {...register("text", { minLength: 1 })}
-            multiline
-            placeholder={"Add comment..."}
-            fullWidth
-            variant="standard"
-          />
-          <Button sx={{ fontWeight: 700 }} type={"submit"}>
-            Send
-          </Button>
+        <Box position={"relative"} bottom={0}>
+          <Box
+            sx={{
+              borderTop: "1px solid #D5D5D5",
+              display: "flex",
+              alignItems: "center",
+            }}
+            padding={"5px 10px"}
+          >
+            <IconButton onClick={() => onLike()}>
+              {isLiked ? (
+                <FavoriteRounded sx={{ fontSize: "1.5rem", color: "#000" }} />
+              ) : (
+                <FavoriteBorderOutlined
+                  sx={{ fontSize: "1.5rem", color: "#000" }}
+                />
+              )}
+            </IconButton>
+            <span
+              style={{ color: "#000", fontSize: "12px", lineHeight: "14px" }}
+            >
+              {!likes.length && ""}
+              {!!likes.length && getLikesString()}
+            </span>
+          </Box>
+          <Box
+            component={"form"}
+            display={"flex"}
+            alignItems={"center"}
+            onSubmit={handleSubmit(newCommentHandler)}
+            sx={{ borderTop: "1px solid #D5D5D5" }}
+            padding={"5px 10px"}
+          >
+            <InputBase
+              {...register("text", { minLength: 1 })}
+              placeholder={"Add comment..."}
+              fullWidth
+              variant="standard"
+            />
+            <Button sx={{ fontWeight: 700 }} type={"submit"}>
+              Send
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>
@@ -144,15 +203,26 @@ const PostModal = ({ post }) => {
 
 export const Post = ({ _id }) => {
   const [postOpen, setPostOpen] = useState(false);
-  const { data, isLoading, isError, isSuccess } = useGetPostByIdQuery(_id);
+  const {
+    data,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch: refetchPost,
+  } = useGetPostByIdQuery(_id);
+  const [likePost] = useLikePostMutation();
+
+  if (isError) {
+    throw new Error("Error while loading post");
+  }
 
   const postClickHandler = () => {
     setPostOpen(true);
   };
 
-  if (isError) {
-    throw new Error("Error while loading post");
-  }
+  const postLikeHandler = async () => {
+    await likePost(_id).then(() => refetchPost());
+  };
 
   return (
     <Box>
@@ -185,7 +255,7 @@ export const Post = ({ _id }) => {
           maxWidth={"lg"}
           fullWidth={true}
         >
-          <PostModal post={{ ...data }} />
+          <PostModal post={{ ...data }} onLike={postLikeHandler} />
         </Dialog>
       </Box>
     </Box>
