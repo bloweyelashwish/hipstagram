@@ -1,10 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import {
-  selectUser,
-  logout,
-  selectAuthLoadingState,
-} from "../../features/auth/authSlice";
+import { logout, selectAuthLoadingState } from "../../features/auth/authSlice";
 
 import {
   Box,
@@ -48,17 +44,13 @@ export const Header = () => {
     }
   }, [location]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (isError) {
-    throw new Error(error?.message);
-  }
-
   const logoutHandler = () => {
     dispatch(logout());
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   function handleSearchSubmit() {
     navigate({

@@ -12,7 +12,7 @@ export const CommentsList = ({ list }) => {
   return (
     <List>
       {list.map((item) => (
-        <ListItem alignItems="flex-start">
+        <ListItem alignItems="flex-start" key={item._id}>
           <ListItemAvatar>
             <Avatar
               src={item.owner.avatar}

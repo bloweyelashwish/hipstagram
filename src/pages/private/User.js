@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../features/auth/authSlice";
 import {
   useFollowUserMutation,
   useGetFollowersAndFollowingsQuery,
@@ -23,16 +22,21 @@ import {
 } from "@mui/icons-material";
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
+import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 
 export const User = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const currentUserId = useSelector(selectUser)?.id;
-  const isOwnPage = currentUserId === params.id;
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
     params.id
   );
   const [follow] = useFollowUserMutation();
+  const {
+    data: currentUser,
+    isError: userHasError,
+    error: userError,
+    isLoading: userLoading,
+  } = useCurrentUserQuery();
   const {
     data: followersAndFollowings,
     isError: followersHaveError,
@@ -40,7 +44,7 @@ export const User = () => {
     isLoading: followersAreLoading,
   } = useGetFollowersAndFollowingsQuery(params.id);
 
-  if (isLoading || followersAreLoading) {
+  if (isLoading || followersAreLoading || userLoading) {
     return (
       <Stack spacing={2} padding={"2rem"}>
         <Box display={"flex"} alignItems={"center"} columnGap={3}>
@@ -53,18 +57,23 @@ export const User = () => {
   }
 
   if (isError) {
-    throw new Error(`${error?.message}`);
+    throw new Error(error?.message);
   }
 
   if (followersHaveError) {
-    throw new Error(`${followersError.message}`);
+    throw new Error(followersError.message);
   }
 
-  const { posts, followersCount, followingsCount, login, id } = data;
+  if (userHasError) {
+    throw new Error(userError?.message);
+  }
+
+  const { posts, followersCount, followingsCount, login, id, avatar } = data;
   const { followers: userFollowers } = followersAndFollowings;
 
+  const isOwnPage = currentUser.id === params.id;
   const isFollowed = userFollowers.find((follower) => {
-    return follower.id === currentUserId;
+    return follower.id === currentUser.id;
   });
 
   async function handleFollowButtonClick() {
@@ -79,7 +88,10 @@ export const User = () => {
           columnGap={10}
           sx={{ flexDirection: { xs: "column", md: "row" } }}
         >
-          <Avatar sx={{ height: "150px", width: "150px", flexShrink: 0 }} />
+          <Avatar
+            sx={{ height: "150px", width: "150px", flexShrink: 0 }}
+            src={avatar}
+          />
           <Box
             display={"flex"}
             flexDirection="column"

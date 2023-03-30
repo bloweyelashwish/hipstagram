@@ -1,11 +1,8 @@
 import { Box, TextField, Avatar, Button } from "@mui/material";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../features/auth/authSlice";
 import { useForm } from "react-hook-form";
 import { useUpdateCurrentUserMutation } from "../../features/users/usersApiSlice";
 import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 import { convertToBase64 } from "../../utils/convertToBase64";
-import { useState } from "react";
 
 export const EditUserForm = () => {
   const {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGetPostByIdQuery, useLikePostMutation } from "./postsApiSlice";
 import {
+  useCurrentUserQuery,
   useGetFollowersAndFollowingsQuery,
   useGetUserByIdQuery,
 } from "../users/usersApiSlice";
@@ -8,8 +9,6 @@ import {
   useGetCommentsByPostIdQuery,
   useCreateCommentMutation,
 } from "../comments/commentsApiSlice";
-import { useSelector } from "react-redux";
-import { selectUser } from "../auth/authSlice";
 import { useForm } from "react-hook-form";
 
 import {
@@ -45,26 +44,39 @@ const PostModal = ({ post, onLike }) => {
     error: followersError,
     isError: followersHaveError,
   } = useGetFollowersAndFollowingsQuery(post.ownerId);
+  const {
+    data: currentUser,
+    isError: currentUserHasError,
+    isLoading: currentUserLoading,
+    error: currentUserError,
+  } = useCurrentUserQuery();
 
   const [createComment] = useCreateCommentMutation();
   const { register, handleSubmit, reset } = useForm();
 
-  const currentUser = useSelector(selectUser);
-
-  if (userLoading || commentsLoading) {
+  if (
+    userLoading ||
+    commentsLoading ||
+    followersLoading ||
+    currentUserLoading
+  ) {
     return <p>is loading</p>;
   }
 
   if (userHasError) {
-    throw new Error(`${userError?.message}`);
+    throw new Error(userError?.message);
   }
 
   if (commentsHaveError) {
-    throw new Error(`${commentsError?.message}`);
+    throw new Error(commentsError?.message);
   }
 
   if (followersHaveError) {
-    throw new Error(`${followersError?.message}`);
+    throw new Error(followersError?.message);
+  }
+
+  if (currentUserHasError) {
+    throw new Error(currentUserError?.message);
   }
 
   const newCommentHandler = async (data) => {
