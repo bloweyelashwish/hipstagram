@@ -1,8 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../../features/auth/authSlice";
-import { useUploadPostMutation } from "../../features/posts/postsApiSlice";
-import { useGetUserByIdQuery } from "../../features/users/usersApiService";
+import {
+  useFollowUserMutation,
+  useGetFollowersAndFollowingsQuery,
+  useGetUserByIdQuery,
+} from "../../features/users/usersApiSlice";
 
 import {
   Avatar,
@@ -23,13 +26,20 @@ import { Post } from "../../features/posts/Post";
 
 export const User = () => {
   const params = useParams();
-  const dispatch = useDispatch();
-  const isOwnPage = useSelector(selectUser)?.id === params.id;
-  const { data, isLoading, isError, isSuccess, refetch } = useGetUserByIdQuery(
+  const currentUserId = useSelector(selectUser)?.id;
+  const isOwnPage = currentUserId === params.id;
+  const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
     params.id
   );
+  const [follow] = useFollowUserMutation();
+  const {
+    data: followersAndFollowings,
+    isError: followersHaveError,
+    error: followersError,
+    isLoading: followersAreLoading,
+  } = useGetFollowersAndFollowingsQuery(params.id);
 
-  if (isLoading) {
+  if (isLoading || followersAreLoading) {
     return (
       <Stack spacing={2} padding={"2rem"}>
         <Box display={"flex"} alignItems={"center"} columnGap={3}>
@@ -42,15 +52,31 @@ export const User = () => {
   }
 
   if (isError) {
-    return <p>Error</p>;
+    throw new Error(`${error?.message}`);
+  }
+  if (followersError) {
+    throw new Error(`${followersError.message}`);
   }
 
-  const { posts, followersCount, followingsCount, login } = data;
+  const { posts, followersCount, followingsCount, login, id } = data;
+  const { followers: userFollowers } = followersAndFollowings;
 
+  const isFollowed = userFollowers.find((follower) => {
+    return follower.id === currentUserId;
+  });
+
+  async function handleFollowButtonClick() {
+    await follow(id).then(() => refetch());
+  }
+  console.log(isFollowed);
   return (
     <Box>
       <Box sx={{ borderBottom: "1px solid #D9D9D9" }} padding={"38px 0"}>
-        <Box display={"flex"} columnGap={10}>
+        <Box
+          display={"flex"}
+          columnGap={10}
+          sx={{ flexDirection: { xs: "column", md: "row" } }}
+        >
           <Avatar sx={{ height: "150px", width: "150px", flexShrink: 0 }} />
           <Box
             display={"flex"}
@@ -81,29 +107,29 @@ export const User = () => {
               display={"flex"}
               alignItems={"center"}
               justifyContent={"flex-start"}
-              columnGap={10}
               width={"100%"}
+              sx={{ marginTop: 2, columnGap: { xs: "1rem", md: "4rem" } }}
             >
               <Typography
                 sx={{
-                  fontSize: "24px",
-                  lineHeight: "28px",
+                  fontSize: { xs: "18px", md: "24px " },
+                  lineHeight: { xs: "21px", md: "28px " },
                 }}
               >
                 {posts.length ?? 0} posts
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "24px",
-                  lineHeight: "28px",
+                  fontSize: { xs: "18px", md: "24px " },
+                  lineHeight: { xs: "21px", md: "28px " },
                 }}
               >
                 {followersCount} followers
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "24px",
-                  lineHeight: "28px",
+                  fontSize: { xs: "18px", md: "24px " },
+                  lineHeight: { xs: "21px", md: "28px " },
                 }}
               >
                 {followingsCount} followings
@@ -115,16 +141,17 @@ export const User = () => {
                   sx={{
                     fontSize: "24px",
                     width: "100%",
-                    backgroundColor: "#4D88ED",
+                    backgroundColor: isFollowed ? "grey" : "#4D88ED",
                     color: "white",
                     borderRadius: "5px",
                     "&:hover": {
                       opacity: "0.7",
-                      backgroundColor: "#4D88EE",
+                      backgroundColor: isFollowed ? "grey" : "#4D88ED",
                     },
                   }}
+                  onClick={handleFollowButtonClick}
                 >
-                  Follow
+                  {isFollowed ? "Unfollow" : "Follow"}
                 </Button>
               </Box>
             )}
@@ -160,8 +187,8 @@ export const User = () => {
           <Grid container spacing={2} columns={{ xs: 12 }}>
             {posts.map((post) => {
               return (
-                <Grid item xs={6}>
-                  <Post {...post} key={post._id} />
+                <Grid item xs={6} key={post._id}>
+                  <Post {...post} />
                 </Grid>
               );
             })}

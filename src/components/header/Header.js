@@ -1,30 +1,72 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import {
   selectUser,
   logout,
   selectAuthLoadingState,
 } from "../../features/auth/authSlice";
 
-import { Box, IconButton, Skeleton, Typography } from "@mui/material";
-import { LogoutOutlined, PersonOutlined } from "@mui/icons-material";
-import { NavLink } from "react-router-dom";
+import {
+  Box,
+  IconButton,
+  Skeleton,
+  Typography,
+  Container,
+  Paper,
+  InputBase,
+} from "@mui/material";
+import {
+  LogoutOutlined,
+  PersonOutlined,
+  SearchOutlined,
+} from "@mui/icons-material";
+import {
+  NavLink,
+  createSearchParams,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 export const Header = () => {
+  const location = useLocation();
+  const [currentQuery, setCurrentQuery] = useState("");
+  const navigate = useNavigate();
   const loadingState = useSelector(selectAuthLoadingState);
   const currentUser = useSelector(selectUser);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (location.pathname.includes("search")) {
+      setCurrentQuery(location.search.split("=")[1]);
+    }
+  }, [location]);
 
   const logoutHandler = () => {
     dispatch(logout());
   };
 
+  function handleSearchSubmit() {
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        users: currentQuery.toLowerCase(),
+      }).toString(),
+    });
+  }
+
+  const searchHandler = ({ target }) => {
+    setCurrentQuery(target.value);
+  };
+
+  const keyDownHandler = (event) => {
+    if (event.key === "Enter") {
+      handleSearchSubmit();
+    }
+  };
+
   return (
     <Box
       component={"header"}
-      display={"flex"}
-      alignItems={"center"}
-      justifyContent={"space-between"}
-      padding={"0.75rem"}
       sx={{
         backgroundColor: "#4D88ED",
         position: "sticky",
@@ -32,32 +74,81 @@ export const Header = () => {
         top: 0,
       }}
     >
-      <div>search input</div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>
-        <NavLink
-          to={`/feed`}
-          style={{ textDecoration: "none", color: "inherit" }}
+      <Container
+        sx={{
+          padding: "0.75rem 0",
+          columnGap: "5rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Paper
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexGrow: 1,
+            flexBasis: 0,
+          }}
         >
-          Hipstagram
-        </NavLink>
-      </Typography>
-      <Box display={"flex"} alignItems={"center"} rowGap={1}>
-        <IconButton>
-          {loadingState ? (
-            <Skeleton variant="circular" fontSize="1.75rem" />
-          ) : (
-            <NavLink
-              to={`/user/${currentUser?.id}`}
-              style={{ display: "flex" }}
-            >
-              <PersonOutlined sx={{ color: "#fff", fontSize: "2rem" }} />
-            </NavLink>
-          )}
-        </IconButton>
-        <IconButton onClick={logoutHandler}>
-          <LogoutOutlined sx={{ color: "#fff", fontSize: "1.75rem" }} />
-        </IconButton>
-      </Box>
+          <IconButton
+            type="button"
+            sx={{ p: "10px" }}
+            aria-label="search"
+            placeholder={"Search users"}
+            onClick={handleSearchSubmit}
+          >
+            <SearchOutlined sx={{ fontSize: "1.5rem" }} />
+          </IconButton>
+          <InputBase
+            placeholder={"Search users"}
+            value={currentQuery}
+            onChange={searchHandler}
+            onKeyDown={keyDownHandler}
+          />
+        </Paper>
+        <Typography
+          sx={{
+            fontSize: "24px",
+            fontWeight: 700,
+            color: "#fff",
+            textAlign: "center",
+            flexGrow: 1,
+            marginX: "auto",
+          }}
+        >
+          <NavLink
+            to={`/feed`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            Hipstagram
+          </NavLink>
+        </Typography>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"flex-end"}
+          rowGap={1}
+          flexGrow={1}
+          flexBasis={0}
+        >
+          <IconButton>
+            {loadingState ? (
+              <Skeleton variant="circular" fontSize="1.75rem" />
+            ) : (
+              <NavLink
+                to={`/user/${currentUser?.id}`}
+                style={{ display: "flex" }}
+              >
+                <PersonOutlined sx={{ color: "#fff", fontSize: "2rem" }} />
+              </NavLink>
+            )}
+          </IconButton>
+          <IconButton onClick={logoutHandler}>
+            <LogoutOutlined sx={{ color: "#fff", fontSize: "1.75rem" }} />
+          </IconButton>
+        </Box>
+      </Container>
     </Box>
   );
 };
