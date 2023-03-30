@@ -13,24 +13,18 @@ const App = () => {
   const { data, isLoading, isSuccess, isError } = useCurrentUserQuery();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isError) {
-      dispatch(logout());
-      return;
-    }
-
-    if (isLoading) {
-      dispatch(setLoadingState({ loading: true }));
-    }
-
-    if (isSuccess && !isLoading) {
-      dispatch(setLoadingState({ loading: false }));
-      dispatch(setUser({ user: data }));
-    }
-  }, [data, dispatch, isError, isLoading, isSuccess]);
+  if (isError) {
+    dispatch(logout());
+    return;
+  }
 
   if (isLoading) {
+    dispatch(setLoadingState({ loading: true }));
     return <Loader />;
+  }
+
+  if (isSuccess) {
+    dispatch(setUser({ user: data }));
   }
 
   return (
