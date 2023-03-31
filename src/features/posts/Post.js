@@ -172,7 +172,7 @@ const PostModal = ({ post, onLike }) => {
             overflowX: "hidden",
             display: "flex",
             flexDirection: "column-reverse",
-            maxHeight: '370px';
+            maxHeight: '370px',
           }}
         >
           {commentsData.length ? (

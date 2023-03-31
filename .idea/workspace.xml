@@ -4,7 +4,6 @@
     <list default="true" id="58f4dc83-b163-4ce7-8c34-dcd879b132cc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/features/posts/Post.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/Post.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" />
@@ -85,7 +84,7 @@
       <workItem from="1680092559028" duration="795000" />
       <workItem from="1680273539348" duration="63000" />
       <workItem from="1680273611536" duration="18000" />
-      <workItem from="1680273640970" duration="391000" />
+      <workItem from="1680273640970" duration="420000" />
     </task>
     <servers />
   </component>
