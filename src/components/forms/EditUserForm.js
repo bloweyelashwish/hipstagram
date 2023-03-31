@@ -42,6 +42,7 @@ export const EditUserForm = () => {
     if (r.error) {
       toast.error(r.error.data);
     } else {
+      toast.success("Your profile was successfully updated");
       refetchUser();
     }
   }
