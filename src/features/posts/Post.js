@@ -25,6 +25,7 @@ import { CommentsList } from "../comments/CommentsList";
 import { useSelector } from "react-redux";
 import { selectUser } from "../auth/authSlice";
 import { toast } from "react-toastify";
+import { Loader } from "../../components/ui/Loader/Loader";
 
 const PostModal = ({ post, onLike }) => {
   const {
@@ -52,7 +53,7 @@ const PostModal = ({ post, onLike }) => {
   const { register, handleSubmit, reset } = useForm();
 
   if (userLoading || commentsLoading || followersLoading) {
-    return <p>is loading</p>;
+    return <Loader />;
   }
 
   if (userHasError) {

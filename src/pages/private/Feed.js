@@ -1,14 +1,14 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useGetFeedQuery } from "../../features/posts/postsApiSlice";
 import errorImg from "../../assets/error.svg";
-import { Stack } from "@mui/system";
 import { Post } from "../../features/posts/Post";
+import { Loader } from "../../components/ui/Loader/Loader";
 
 export const Feed = () => {
   const { data: feedData, isError, isLoading, error } = useGetFeedQuery();
 
   if (isLoading) {
-    return <p>Loading</p>;
+    return <Loader />;
   }
 
   if (isError) {

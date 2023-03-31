@@ -2,6 +2,9 @@ import { Box, ListItem, Typography, List } from "@mui/material";
 import { useLocation, Link } from "react-router-dom";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
+import { Loader } from "../../components/ui/Loader/Loader";
+import { toast } from "react-toastify";
+import { MinifiedUser } from "../../features/users/MinifiedUser";
 
 export const Search = () => {
   const location = useLocation();
@@ -14,11 +17,11 @@ export const Search = () => {
   } = useGetUsersByLoginQuery(search.split("=")[1]);
 
   if (isLoading) {
-    return <p>Loading</p>;
+    return <Loader />;
   }
 
   if (isError) {
-    throw new Error(`${error?.message}`);
+    toast.error(error.message);
   }
 
   if (!searchedUsers.length) {
@@ -56,12 +59,14 @@ export const Search = () => {
     );
   }
 
+  console.log(searchedUsers);
+
   return (
     <Box>
       <List>
         {searchedUsers.map((user) => (
           <ListItem key={user._id}>
-            <Link to={`/user/${user._id}`}>{user.login}</Link>
+            <MinifiedUser {...user} />
           </ListItem>
         ))}
       </List>
