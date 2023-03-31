@@ -1,5 +1,5 @@
 import { Box, ListItem, Typography, List } from "@mui/material";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Loader } from "../../components/ui/Loader/Loader";
@@ -21,7 +21,7 @@ export const Search = () => {
   }
 
   if (isError) {
-    toast.error(error.message);
+    throw new Error(error.message);
   }
 
   if (!searchedUsers.length) {
@@ -58,8 +58,6 @@ export const Search = () => {
       </Box>
     );
   }
-
-  console.log(searchedUsers);
 
   return (
     <Box>

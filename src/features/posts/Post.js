@@ -69,9 +69,13 @@ const PostModal = ({ post, onLike }) => {
   }
 
   const newCommentHandler = async (data) => {
-    await createComment({ text: data.text, postId: post._id }).then(() =>
-      refetchComments()
-    );
+    const r = await createComment({ text: data.text, postId: post._id });
+    if (r.error) {
+      toast.error(r.error.data);
+    } else {
+      refetchComments();
+    }
+
     reset();
   };
 

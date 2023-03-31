@@ -18,7 +18,7 @@ export const MinifiedUser = ({ _id, login, avatar }) => {
     return <Loader />;
   }
   if (isError) {
-    toast.error(error?.message);
+    throw new Error(error?.message);
   }
 
   const { following } = currentUser;

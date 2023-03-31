@@ -53,11 +53,11 @@ export const User = () => {
   }
 
   if (isError) {
-    toast.error(error?.message);
+    throw new Error(error?.message);
   }
 
   if (followersHaveError) {
-    toast.error(followersError?.message);
+    throw new Error(followersError?.message);
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;

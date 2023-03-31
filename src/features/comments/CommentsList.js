@@ -11,7 +11,7 @@ export const CommentsList = ({ list }) => {
   return (
     <List>
       {list.map((item) => (
-        <ListItem alignItems="flex-start" key={item._id}>
+        <ListItem alignItems="flex-start" key={`${item.id}-${item.owner.id}`}>
           <ListItemAvatar>
             <Avatar
               src={item.owner.avatar}

@@ -33,8 +33,6 @@ export const Login = () => {
     }
   }
 
-  console.log(errors);
-
   return (
     <Box flexGrow={1} display={"flex"} flexDirection={"column"}>
       <Typography variant="h4" component="h2">
@@ -67,8 +65,8 @@ export const Login = () => {
             },
           })}
           label={"Your username"}
-          error={!!errors?.email?.login}
-          helperText={errors?.email?.login}
+          error={!!errors?.login?.message}
+          helperText={errors?.login?.message}
           fullWidth
         />
         <TextField

@@ -4,13 +4,16 @@ import { theme } from "./contexts/theme";
 
 import "./App.css";
 import { AppRoutes } from "./routes/Routes";
+import ErrorBoundary from "./components/boundary/ErrorBoundary";
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
-        <AppRoutes />
-      </div>
+      <ErrorBoundary>
+        <div className="App">
+          <AppRoutes />
+        </div>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };
