@@ -103,9 +103,23 @@ export const EditUserForm = () => {
             </Button>
           </Box>
           <TextField
-            {...register("login", { value: login, minLength: 6 })}
+            {...register("login", {
+              minLength: {
+                value: 2,
+                message: "Username must contain at least 2 characters.",
+              },
+              maxLength: {
+                value: 30,
+                message: "Username is too long",
+              },
+              pattern: {
+                value: /^[A-Za-z0-9]*$/,
+                message: "Login must consist only of letters and numbers",
+              },
+            })}
             label={"Login"}
-            defaultValue={login}
+            error={!!errors?.email?.login}
+            helperText={errors?.email?.login}
             fullWidth
           />
         </Box>
@@ -116,19 +130,43 @@ export const EditUserForm = () => {
           flexBasis={"50%"}
         >
           <TextField
-            {...register("firstName", { minLength: 1 })}
+            {...register("firstName", {
+              minLength: 1,
+              pattern: {
+                value: /^[A-Za-z0-9]*$/,
+                message: "Name must consist only of letters and numbers",
+              },
+            })}
             label={"First name"}
             defaultValue={firstName}
+            error={!!errors?.firstName?.message}
+            helperText={errors?.firstName?.message}
           />
           <TextField
-            {...register("lastName", { minLength: 1 })}
+            {...register("lastName", {
+              minLength: 1,
+              pattern: {
+                value: /^[A-Za-z0-9]*$/,
+                message: "Login must consist only of letters and numbers",
+              },
+            })}
             label={"Last name"}
             defaultValue={lastName}
+            error={!!errors?.lastName?.message}
+            helperText={errors?.lastName?.message}
           />
           <TextField
-            {...register("email", { minLength: 8 })}
+            {...register("email", {
+              minLength: 8,
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
             label={"Email"}
             defaultValue={email}
+            error={!!errors?.email?.message}
+            helperText={errors?.email?.message}
           />
         </Box>
       </Box>
