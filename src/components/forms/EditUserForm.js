@@ -1,17 +1,28 @@
 import { Box, TextField, Avatar, Button } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useUpdateCurrentUserMutation } from "../../features/users/usersApiSlice";
 import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 import { convertToBase64 } from "../../utils/convertToBase64";
 
 export const EditUserForm = () => {
+  const [stateAvatar, setStateAvatar] = useState();
+
   const {
     data: user,
     isError,
     error,
     refetch: refetchUser,
+    isSuccess,
   } = useCurrentUserQuery();
   const [updateUser] = useUpdateCurrentUserMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setStateAvatar(user.avatar);
+    }
+  }, [user, isSuccess]);
 
   const {
     register,
@@ -20,19 +31,38 @@ export const EditUserForm = () => {
   } = useForm();
 
   if (isError) {
-    throw new Error(error?.message);
+    toast.error(error.message);
   }
 
-  const { avatar, login, email, firstName, lastName } = user;
+  const { avatar: usrAvatar, login, email, firstName, lastName } = user;
+
+  async function updateApiUser(data) {
+    console.log(data);
+    const r = await updateUser(data);
+    if (r.error) {
+      toast.error(r.error.data);
+    } else {
+      refetchUser();
+    }
+  }
+
+  async function handleAvatarChange({ target }) {
+    const newAvatar = await convertToBase64(target.files[0]);
+    setStateAvatar(newAvatar);
+  }
 
   const submitHandler = async (data) => {
-    let avatarString = "";
+    if (typeof data.avatar === "object" && !data.avatar.length) {
+      updateApiUser({ ...data, avatar: usrAvatar });
+      return;
+    }
+
+    let avatarStr = "";
     try {
-      avatarString = await convertToBase64(data.avatar[0]);
+      avatarStr = await convertToBase64(data.avatar[0]);
+      updateApiUser({ ...data, avatar: avatarStr });
     } catch (e) {
-      console.log(e);
-    } finally {
-      updateUser({ ...data, avatar: avatarString }).then(() => refetchUser());
+      toast.error(e.message);
     }
   };
 
@@ -54,13 +84,21 @@ export const EditUserForm = () => {
             alignItems={"center"}
             alignSelf={"flex-start"}
           >
-            <Avatar src={avatar} sx={{ width: "140px", height: "140px" }} />
+            <Avatar
+              src={stateAvatar}
+              sx={{ width: "140px", height: "140px" }}
+            />
             <Button
               component="label"
               variant="contained"
               sx={{ marginTop: "10px", backgroundColor: "#4D88ED" }}
             >
-              <input type={"file"} hidden {...register("avatar")} />
+              <input
+                type={"file"}
+                hidden
+                {...register("avatar")}
+                onChange={handleAvatarChange}
+              />
               Change photo
             </Button>
           </Box>
