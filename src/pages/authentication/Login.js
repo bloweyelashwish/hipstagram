@@ -1,53 +1,75 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { useState } from "react";
 import { useLoginMutation } from "../../features/auth/authApiService";
 import { setToken } from "../../features/auth/authSlice";
 import { STORAGE_PREFIX } from "../../globals";
 
 export const Login = () => {
+  const [success, setIsSuccess] = useState(false);
+
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
-  const [loginHook, meta] = useLoginMutation();
+  const [loginHook] = useLoginMutation();
   const dispatch = useDispatch();
-  const { isSuccess, isError, error } = meta;
 
   async function onSubmit(data) {
     const user = await loginHook(data);
-    if (user.data?.access_token) {
+
+    if (user.error) {
+      toast.error(user.error.data ?? "Unable to login.");
+    }
+
+    if (user.data && user.data.access_token) {
       dispatch(setToken({ accessToken: user.data.access_token }));
       localStorage.setItem(STORAGE_PREFIX + "token", user.data.access_token);
+      setIsSuccess(true);
     }
   }
 
+  console.log(errors);
+
   return (
-    <div>
+    <Box flexGrow={1} display={"flex"} flexDirection={"column"}>
+      <Typography variant="h4" component="h2">
+        Sign in
+      </Typography>
       <Box
+        marginTop={"30px"}
         component={"form"}
+        onSubmit={handleSubmit(onSubmit)}
+        height={"100%"}
         display={"flex"}
         flexDirection={"column"}
         rowGap={2}
-        onSubmit={handleSubmit(onSubmit)}
+        flexGrow={1}
       >
         <TextField
           {...register("login", {
             required: "Login is required",
             minLength: {
               value: 2,
-              message: "Username must contain at least 2 characters",
+              message: "Username must contain at least 2 characters.",
             },
             maxLength: {
               value: 30,
               message: "Username is too long",
             },
+            pattern: {
+              value: /^[A-Za-z0-9]*$/,
+              message: "Login must consist only of letters and numbers",
+            },
           })}
           label={"Your username"}
           error={!!errors?.email?.login}
           helperText={errors?.email?.login}
+          fullWidth
         />
         <TextField
           {...register("password", {
@@ -56,19 +78,46 @@ export const Login = () => {
               value: 8,
               message: "Password must contain at least 8 characters",
             },
+            maxLength: {
+              value: 16,
+              message: "Password must contain a maximum of 16 characters",
+            },
+            pattern: {
+              value: /^[A-Za-z0-9]*$/,
+              message: "Login must consist only of letters and numbers",
+            },
           })}
           label={"Your password"}
           error={!!errors?.password?.message}
           helperText={errors?.password?.message}
+          fullWidth
         />
-        <Button type={"submit"}>Login</Button>
+        <Button
+          display={"block"}
+          type={"submit"}
+          variant="contained"
+          sx={{
+            backgroundColor: "#4D88ED",
+            fontSize: "24px",
+            marginTop: "50px",
+          }}
+          fullWidth
+        >
+          Login
+        </Button>
       </Box>
-      <div>
-        <p>
-          Not signed up yet? <Link to="/signup">Sign up</Link>
-        </p>
-        {isSuccess && <Navigate to={"/feed"} replace />}
-      </div>
-    </div>
+      <Box marginTop={"1rem"}>
+        <Typography sx={{ fontSize: "18px" }}>
+          Not signed up yet?{" "}
+          <Link
+            to="/signup"
+            style={{ color: " #4D88ED", textDecoration: "none" }}
+          >
+            Sign up
+          </Link>
+        </Typography>
+        {success && <Navigate to={"/feed"} replace />}
+      </Box>
+    </Box>
   );
 };
