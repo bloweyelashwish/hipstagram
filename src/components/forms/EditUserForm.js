@@ -37,8 +37,8 @@ export const EditUserForm = () => {
   const { avatar: usrAvatar, login, email, firstName, lastName } = user;
 
   async function updateApiUser(data) {
-    console.log(data);
     const r = await updateUser(data);
+
     if (r.error) {
       toast.error(r.error.data);
     } else {
@@ -47,20 +47,20 @@ export const EditUserForm = () => {
   }
 
   async function handleAvatarChange({ target }) {
-    const newAvatar = await convertToBase64(target.files[0]);
+    let newAvatar = "";
+    try {
+      newAvatar = await convertToBase64(target.files[0]);
+      setStateAvatar(newAvatar);
+    } catch (e) {
+      toast.error(e.message);
+    }
+
     setStateAvatar(newAvatar);
   }
 
   const submitHandler = async (data) => {
-    if (typeof data.avatar === "object" && !data.avatar.length) {
-      updateApiUser({ ...data, avatar: usrAvatar });
-      return;
-    }
-
-    let avatarStr = "";
     try {
-      avatarStr = await convertToBase64(data.avatar[0]);
-      updateApiUser({ ...data, avatar: avatarStr });
+      await updateApiUser({ ...data, avatar: stateAvatar });
     } catch (e) {
       toast.error(e.message);
     }
