@@ -1,1 +1,2 @@
-export * from "../../features/posts/PostUpload";
+export * from "./EditUserForm";
+export * from "./EditUserPasswordForm";

@@ -16,7 +16,18 @@ const authApiSlice = apiService.injectEndpoints({
         body: formData,
       }),
     }),
+    updatePassword: build.mutation({
+      query: (formData) => ({
+        url: "/auth/updatePassword",
+        body: formData,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegistrationMutation } = authApiSlice;
+export const {
+  useLoginMutation,
+  useRegistrationMutation,
+  useUpdatePasswordMutation,
+} = authApiSlice;

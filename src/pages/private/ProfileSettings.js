@@ -1,4 +1,5 @@
 import { Container, TextField, Box } from "@mui/material";
+import { EditUserPasswordForm } from "../../components/forms";
 import { EditUserForm } from "../../components/forms/EditUserForm";
 
 export const ProfileSettings = () => {
@@ -8,16 +9,8 @@ export const ProfileSettings = () => {
         <EditUserForm />
       </Box>
       <Box>
-        <Box
-          sx={{ paddingBlock: "50px 0" }}
-          component={"form"}
-          display="flex"
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          columnGap={"32px"}
-        >
-          <TextField fullWidth />
-          <TextField fullWidth />
+        <Box sx={{ paddingBlock: "50px 0" }}>
+          <EditUserPasswordForm />
         </Box>
       </Box>
     </Container>

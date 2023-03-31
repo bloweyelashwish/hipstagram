@@ -34,7 +34,7 @@ export const EditUserForm = () => {
     toast.error(error.message);
   }
 
-  const { avatar: usrAvatar, login, email, firstName, lastName } = user;
+  const { login, email, firstName, lastName } = user;
 
   async function updateApiUser(data) {
     const r = await updateUser(data);
@@ -120,6 +120,7 @@ export const EditUserForm = () => {
             label={"Login"}
             error={!!errors?.email?.login}
             helperText={errors?.email?.login}
+            defaultValue={login}
             fullWidth
           />
         </Box>
