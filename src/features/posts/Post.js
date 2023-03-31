@@ -167,12 +167,12 @@ const PostModal = ({ post, onLike }) => {
         </Box>
         <Box
           flexGrow={1}
-          maxHeight={"100% - 85px"}
           sx={{
             overflowY: "auto",
             overflowX: "hidden",
             display: "flex",
             flexDirection: "column-reverse",
+            maxHeight: '370px';
           }}
         >
           {commentsData.length ? (
@@ -226,7 +226,7 @@ const PostModal = ({ post, onLike }) => {
             padding={"5px 10px"}
           >
             <InputBase
-              {...register("text", { minLength: 1 })}
+              {...register("text", { minLength: 1, maxLength: 60 })}
               placeholder={"Add comment..."}
               fullWidth
               variant="standard"
