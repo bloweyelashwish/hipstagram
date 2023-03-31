@@ -1,31 +1,44 @@
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useRegistrationMutation } from "../../features/auth/authApiService";
 
 export const Registration = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
   } = useForm();
-  const [registrationHook, meta] = useRegistrationMutation();
-  const { isError, error, isSuccess } = meta;
+  const [registrationHook] = useRegistrationMutation();
 
   async function onSubmit(data) {
     const { confirmationPassword, ...requiredData } = data;
-    await registrationHook(requiredData);
+    const r = await registrationHook(requiredData);
+    if (r.error) {
+      toast.error(r.error.data ?? "Unable to register");
+    } else {
+      setIsSuccess(true);
+    }
   }
 
   return (
-    <div>
+    <Box flexGrow={1} display={"flex"} flexDirection={"column"}>
+      <Typography variant="h4" component="h2">
+        Sign up
+      </Typography>
       <Box
+        marginTop={"30px"}
         component={"form"}
+        onSubmit={handleSubmit(onSubmit)}
+        height={"100%"}
         display={"flex"}
         flexDirection={"column"}
         rowGap={2}
-        onSubmit={handleSubmit(onSubmit)}
+        flexGrow={1}
       >
         <TextField
           {...register("email", {
@@ -50,6 +63,10 @@ export const Registration = () => {
             maxLength: {
               value: 30,
               message: "Username is too long",
+            },
+            pattern: {
+              value: /^[A-Za-z0-9]*$/,
+              message: "Login must consist only of letters and numbers",
             },
           })}
           placeholder={"username"}
@@ -83,17 +100,32 @@ export const Registration = () => {
           error={!!errors?.confirmationPassword?.message}
           helperText={errors?.confirmationPassword?.message}
         />
-        <Button type={"submit"}>Sign up</Button>
-        <p>
-          Already signed in? <Link to="/login">Login</Link>
-        </p>
-        {isError && (
-          <p>
-            Error while submitting request: {error.data ?? "Invalid request"}
-          </p>
-        )}
-        {isSuccess && <Navigate to={"/login"} replace />}
+        <Button
+          display={"block"}
+          type={"submit"}
+          variant="contained"
+          sx={{
+            backgroundColor: "#4D88ED",
+            fontSize: "24px",
+            marginTop: "50px",
+          }}
+          fullWidth
+        >
+          Sign up
+        </Button>
+        <Box marginTop={"1rem"}>
+          <Typography sx={{ fontSize: "18px" }}>
+            Already signed in?{" "}
+            <Link
+              to="/login"
+              style={{ color: " #4D88ED", textDecoration: "none" }}
+            >
+              Sign in
+            </Link>
+          </Typography>
+          {isSuccess && <Navigate to={"/login"} replace />}
+        </Box>
       </Box>
-    </div>
+    </Box>
   );
 };
