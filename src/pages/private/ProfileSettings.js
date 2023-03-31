@@ -1,7 +1,5 @@
-import { useForm } from "react-hook-form";
-import { Container, Avatar, Button, TextField, Box } from "@mui/material";
+import { Container, TextField, Box } from "@mui/material";
 import { EditUserForm } from "../../components/forms/EditUserForm";
-import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 
 export const ProfileSettings = () => {
   return (

@@ -1,6 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { logout, selectAuthLoadingState } from "../../features/auth/authSlice";
+import {
+  logout,
+  selectAuthLoadingState,
+  selectUser,
+} from "../../features/auth/authSlice";
 
 import {
   Box,
@@ -22,16 +26,9 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
-import { Loader } from "../ui/Loader/Loader";
 
 export const Header = () => {
-  const {
-    data: currentUser,
-    isLoading,
-    isError,
-    error,
-  } = useCurrentUserQuery();
+  const currentUser = useSelector(selectUser);
   const location = useLocation();
   const [currentQuery, setCurrentQuery] = useState("");
   const navigate = useNavigate();
@@ -47,10 +44,6 @@ export const Header = () => {
   const logoutHandler = () => {
     dispatch(logout());
   };
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   function handleSearchSubmit() {
     navigate({

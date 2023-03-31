@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
-import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
+import { selectUser } from "../../features/auth/authSlice";
 
 export const User = () => {
   const params = useParams();
@@ -31,12 +31,7 @@ export const User = () => {
     params.id
   );
   const [follow] = useFollowUserMutation();
-  const {
-    data: currentUser,
-    isError: userHasError,
-    error: userError,
-    isLoading: userLoading,
-  } = useCurrentUserQuery();
+  const currentUser = useSelector(selectUser);
   const {
     data: followersAndFollowings,
     isError: followersHaveError,
@@ -44,7 +39,7 @@ export const User = () => {
     isLoading: followersAreLoading,
   } = useGetFollowersAndFollowingsQuery(params.id);
 
-  if (isLoading || followersAreLoading || userLoading) {
+  if (isLoading || followersAreLoading) {
     return (
       <Stack spacing={2} padding={"2rem"}>
         <Box display={"flex"} alignItems={"center"} columnGap={3}>
@@ -62,10 +57,6 @@ export const User = () => {
 
   if (followersHaveError) {
     throw new Error(followersError.message);
-  }
-
-  if (userHasError) {
-    throw new Error(userError?.message);
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;

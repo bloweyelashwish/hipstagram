@@ -7,7 +7,6 @@ import { convertToBase64 } from "../../utils/convertToBase64";
 export const EditUserForm = () => {
   const {
     data: user,
-    isSuccess,
     isError,
     error,
     refetch: refetchUser,
@@ -33,7 +32,7 @@ export const EditUserForm = () => {
     } catch (e) {
       console.log(e);
     } finally {
-      updateUser({ ...data, avatar: avatarString }).then(() => updateUser());
+      updateUser({ ...data, avatar: avatarString }).then(() => refetchUser());
     }
   };
 
