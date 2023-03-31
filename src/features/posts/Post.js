@@ -24,6 +24,7 @@ import { FavoriteBorderOutlined, FavoriteRounded } from "@mui/icons-material";
 import { CommentsList } from "../comments/CommentsList";
 import { useSelector } from "react-redux";
 import { selectUser } from "../auth/authSlice";
+import { toast } from "react-toastify";
 
 const PostModal = ({ post, onLike }) => {
   const {
@@ -123,10 +124,29 @@ const PostModal = ({ post, onLike }) => {
             mr={"15px"}
           />
           <Typography
-            sx={{ fontSize: "1rem", paddingInline: "15px", color: "#000" }}
+            sx={{
+              fontSize: "1rem",
+              fontWeight: 600,
+              paddingInline: "15px",
+              color: "#000",
+            }}
+            display={"flex"}
+            flexDirection={"column"}
           >
             {login}
+            <Typography
+              component={"span"}
+              sx={{
+                fontSize: "1rem",
+                paddingInline: "15px",
+                color: "#000",
+                fontWeight: 300,
+              }}
+            >
+              {post.title}
+            </Typography>
           </Typography>
+
           {currentUser.id !== post.ownerId && !isFollowed && (
             <Button
               sx={{
@@ -228,7 +248,8 @@ export const Post = ({ _id }) => {
   const [likePost] = useLikePostMutation();
 
   if (isError) {
-    throw new Error("Error while loading post");
+    toast.error("Could not load post. Try again later!");
+    return;
   }
 
   const postClickHandler = () => {
@@ -236,7 +257,8 @@ export const Post = ({ _id }) => {
   };
 
   const postLikeHandler = async () => {
-    await likePost(_id).then(() => refetchPost());
+    await likePost(_id);
+    refetchPost();
   };
 
   return (

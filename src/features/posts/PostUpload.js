@@ -3,6 +3,7 @@ import { CameraAltOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUploadPostMutation } from "./postsApiSlice";
+import { toast } from "react-toastify";
 
 export const PostUpload = ({ onUpload, ...props }) => {
   const [isActive, setIsActive] = useState(false);
@@ -26,16 +27,18 @@ export const PostUpload = ({ onUpload, ...props }) => {
     handleFileUpload(files[0]);
   };
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
     const DTO = new FormData();
     DTO.set("title", data.title);
     DTO.set("image", imageFile);
 
-    uploadPost(DTO)
-      .unwrap()
-      .then(() => {
-        onUpload();
-      });
+    const r = await uploadPost(DTO);
+
+    if (r.error) {
+      toast.error(r.error.data);
+    } else {
+      onUpload();
+    }
     setIsActive((prev) => !prev);
   }
 

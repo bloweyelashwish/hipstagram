@@ -23,6 +23,7 @@ import {
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
 import { selectUser } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 export const User = () => {
   const params = useParams();
@@ -52,11 +53,11 @@ export const User = () => {
   }
 
   if (isError) {
-    throw new Error(error?.message);
+    toast.error(error?.message);
   }
 
   if (followersHaveError) {
-    throw new Error(followersError.message);
+    toast.error(followersError?.message);
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
@@ -68,7 +69,8 @@ export const User = () => {
   });
 
   async function handleFollowButtonClick() {
-    await follow(id).then(() => refetch());
+    await follow(id);
+    refetch();
   }
 
   return (

@@ -5,6 +5,8 @@ import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 import { Loader } from "../ui/Loader/Loader";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../features/auth/authSlice";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export const AppLayout = () => {
   const dispatch = useDispatch();
@@ -16,16 +18,18 @@ export const AppLayout = () => {
     isSuccess,
   } = useCurrentUserQuery();
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setUser({ user: currentUser }));
+    }
+  }, [isSuccess, dispatch, currentUser]);
+
   if (isLoading) {
     return <Loader />;
   }
 
   if (isError) {
-    throw new Error(error?.message);
-  }
-
-  if (isSuccess) {
-    dispatch(setUser({ user: currentUser }));
+    toast.error(error?.message);
   }
 
   return (

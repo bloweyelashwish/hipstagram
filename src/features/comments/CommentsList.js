@@ -5,7 +5,6 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
-  Typography,
 } from "@mui/material";
 
 export const CommentsList = ({ list }) => {
