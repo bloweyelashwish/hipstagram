@@ -23,7 +23,6 @@ import {
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
 import { selectUser } from "../../features/auth/authSlice";
-import { toast } from "react-toastify";
 
 export const User = () => {
   const params = useParams();

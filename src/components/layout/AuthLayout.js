@@ -1,4 +1,4 @@
-import { Container, Box, Typography, Paper } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import authBg from "../../assets/bg.svg";
 import logo from "../../assets/logo.png";
 

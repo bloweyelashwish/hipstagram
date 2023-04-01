@@ -1,13 +1,16 @@
 import { Box, TextField, Avatar, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { setUser } from "../../features/auth/authSlice";
 import { useUpdateCurrentUserMutation } from "../../features/users/usersApiSlice";
 import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 import { convertToBase64 } from "../../utils/convertToBase64";
 
 export const EditUserForm = () => {
   const [stateAvatar, setStateAvatar] = useState();
+  const dispatch = useDispatch();
 
   const {
     data: user,
@@ -44,6 +47,7 @@ export const EditUserForm = () => {
     } else {
       toast.success("Your profile was successfully updated");
       refetchUser();
+      dispatch(setUser({ user }));
     }
   }
 
