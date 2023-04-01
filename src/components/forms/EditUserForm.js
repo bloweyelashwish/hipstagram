@@ -46,8 +46,8 @@ export const EditUserForm = () => {
       toast.error(r.error.data);
     } else {
       toast.success("Your profile was successfully updated");
-      refetchUser();
-      dispatch(setUser({ user }));
+      const { data: newUser } = await refetchUser();
+      dispatch(setUser({ user: newUser }));
     }
   }
 
