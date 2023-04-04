@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/Post.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/Post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/private/Feed.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/private/Feed.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../public/favicon.ico" beforeDir="false" />
@@ -86,6 +88,7 @@
       <workItem from="1680273611536" duration="18000" />
       <workItem from="1680273640970" duration="555000" />
       <workItem from="1680283889514" duration="14000" />
+      <workItem from="1680628278101" duration="301000" />
     </task>
     <servers />
   </component>

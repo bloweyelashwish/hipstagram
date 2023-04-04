@@ -267,30 +267,35 @@ export const Post = ({ _id }) => {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: '100%', height: '100%'}}>
       <Box
         sx={{
-          aspectRatio: "1",
+          aspectRatio: "4/3",
           cursor: "pointer",
           transition: "all 150ms ease",
           "&:hover": { filter: "blur(2px)", cursor: "zoom-in" },
+          position: 'relative',
+          overflow: 'hidden',
+          borderRadius: '1rem'
         }}
       >
-        {isLoading && <Skeleton animation={"wave"} />}
-        {isSuccess && !isLoading && (
-          <img
-            src={data?.imgUrl}
-            alt={data?.title}
-            onClick={postClickHandler}
-            style={{
-              maxWidth: "100%",
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-        )}
+        <Box sx={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%' }}>
+          {isLoading && <Skeleton animation={"wave"} height={'100%'} width={'100%'} />}
+          {isSuccess && !isLoading && (
+            <img
+              src={data?.imgUrl}
+              alt={data?.title}
+              onClick={postClickHandler}
+              style={{
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
+                display: "block",
+                objectFit: 'cover'
+              }}
+            />
+          )}
+        </Box>
         <Dialog
           open={postOpen}
           onClose={() => setPostOpen(false)}

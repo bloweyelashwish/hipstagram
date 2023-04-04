@@ -51,14 +51,12 @@ export const Feed = () => {
   }
 
   return (
-    <Grid container spacing={5} paddingY={5} justifyContent={"center"}>
+    <Grid container spacing={5} paddingY={5} paddingX={8} justifyContent={"center"}>
       {feedData.map((feedPost) => (
         <Grid
           item
           key={feedPost._id}
-          maxWidth={"700px"}
-          maxHeight={"500px"}
-          overflow={"hidden"}
+          xs={12}
         >
           <Post {...feedPost} />
         </Grid>
