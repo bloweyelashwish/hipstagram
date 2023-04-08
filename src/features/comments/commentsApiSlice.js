@@ -16,8 +16,18 @@ const commentsApiSlice = apiService.injectEndpoints({
         providesTags: ["Comment"],
       }),
     }),
+    deleteCommentById: build.mutation({
+      query: (id) => ({
+        url: `/comments/${id}`,
+        method: "DELETE",
+        providesTags: ["Comment"],
+      }),
+    }),
   }),
 });
 
-export const { useGetCommentsByPostIdQuery, useCreateCommentMutation } =
-  commentsApiSlice;
+export const {
+  useGetCommentsByPostIdQuery,
+  useCreateCommentMutation,
+  useDeleteCommentByIdMutation,
+} = commentsApiSlice;

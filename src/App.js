@@ -22,7 +22,7 @@ const App = () => {
 
     window.addEventListener("storage", checkPersistedState);
 
-    return () => window.removeEventListener("storage", checkPersistedState);
+    return () => window.removeEventListener("storage", checkPersistedState  );
   });
 
   return (

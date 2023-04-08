@@ -188,7 +188,10 @@ export const PostModal = ({ post, onLike }) => {
           }}
         >
           {commentsData.length ? (
-            <CommentsList list={commentsData} />
+            <CommentsList
+              list={commentsData}
+              onChange={() => refetchComments()}
+            />
           ) : (
             <Typography
               sx={{

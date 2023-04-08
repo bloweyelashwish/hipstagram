@@ -5,21 +5,72 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
+  IconButton,
+  Box,
 } from "@mui/material";
+import { Edit, DeleteForever } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { selectUser } from "../auth/authSlice";
+import { toast } from "react-toastify";
+import { useDeleteCommentByIdMutation } from "./commentsApiSlice";
 
-export const CommentsList = ({ list }) => {
+const Comment = ({ comment, onChange }) => {
+  const currentUser = useSelector(selectUser);
+  const isOwnComment = currentUser.id === comment.owner.id;
+  const [deleteComment] = useDeleteCommentByIdMutation();
+
+  const commentRemovalHandler = async () => {
+    const r = await deleteComment(comment.id);
+    if (r.error) {
+      toast.error("Unable to delete comment. Try again later.");
+    } else {
+      onChange();
+    }
+  };
+
+  const commentActions = () => {
+    if (isOwnComment) {
+      return (
+        <Box display={"flex"} alignItems={"center"}>
+          <IconButton>
+            <Edit />
+          </IconButton>
+          <IconButton onClick={commentRemovalHandler}>
+            <DeleteForever />
+          </IconButton>
+        </Box>
+      );
+    } else {
+      return (
+        <IconButton onClick={commentRemovalHandler}>
+          <DeleteForever />
+        </IconButton>
+      );
+    }
+  };
+
+  return (
+    <ListItem
+      alignItems="flex-start"
+      key={`${comment.id}-${comment.owner.id}`}
+      secondaryAction={commentActions()}
+    >
+      <ListItemAvatar>
+        <Avatar
+          src={comment.owner.avatar}
+          sx={{ width: "40px", height: "40px" }}
+        />
+      </ListItemAvatar>
+      <ListItemText primary={comment.owner.login} secondary={comment.text} />
+    </ListItem>
+  );
+};
+
+export const CommentsList = ({ list, onChange }) => {
   return (
     <List>
       {list.map((item) => (
-        <ListItem alignItems="flex-start" key={`${item.id}-${item.owner.id}`}>
-          <ListItemAvatar>
-            <Avatar
-              src={item.owner.avatar}
-              sx={{ width: "40px", height: "40px" }}
-            />
-          </ListItemAvatar>
-          <ListItemText primary={item.owner.login} secondary={item.text} />
-        </ListItem>
+        <Comment comment={item} onChange={onChange} />
       ))}
     </List>
   );
