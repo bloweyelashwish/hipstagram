@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { useLoginMutation } from "../../features/auth/authApiService";
 import { setToken } from "../../features/auth/authSlice";
-import { STORAGE_PREFIX } from "../../globals";
 
 export const Login = () => {
   const [success, setIsSuccess] = useState(false);

@@ -14,4 +14,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(apiService.middleware),
 });
 
-store.subscribe(debounce(() => persistState(store.getState()), 900));
+store.subscribe(
+  debounce(() => {
+    persistState(store.getState());
+  }, 900)
+);

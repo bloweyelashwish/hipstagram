@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader } from "../../components/ui/Loader/Loader";
 import { useFollowUserMutation, useCurrentUserQuery } from "./usersApiSlice";
+import { useDispatch } from "react-redux";
+import { logout } from "../auth/authSlice";
 
 export const MinifiedUser = ({ _id, login, avatar }) => {
+  const dispatch = useDispatch();
   const {
     data: currentUser,
     isLoading,
@@ -18,7 +21,11 @@ export const MinifiedUser = ({ _id, login, avatar }) => {
     return <Loader />;
   }
   if (isError) {
-    throw new Error(error?.message);
+    toast.error(error.message);
+    if (error.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+    return;
   }
 
   const { following } = currentUser;

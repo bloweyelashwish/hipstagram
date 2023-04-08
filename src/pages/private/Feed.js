@@ -3,8 +3,12 @@ import { useGetFeedQuery } from "../../features/posts/postsApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Post } from "../../features/posts/Post";
 import { Loader } from "../../components/ui/Loader/Loader";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
 
 export const Feed = () => {
+  const dispatch = useDispatch();
   const { data: feedData, isError, isLoading, error } = useGetFeedQuery();
 
   if (isLoading) {
@@ -12,7 +16,12 @@ export const Feed = () => {
   }
 
   if (isError) {
-    throw new Error(`${error?.status} ${error.message}`);
+    toast.error(error?.message);
+    if (error.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+
+    return null;
   }
 
   if (!feedData.length) {
@@ -51,13 +60,15 @@ export const Feed = () => {
   }
 
   return (
-    <Grid container spacing={5} paddingY={5} paddingX={8} justifyContent={"center"}>
+    <Grid
+      container
+      spacing={5}
+      paddingY={5}
+      paddingX={8}
+      justifyContent={"center"}
+    >
       {feedData.map((feedPost) => (
-        <Grid
-          item
-          key={feedPost._id}
-          xs={12}
-        >
+        <Grid item key={feedPost._id} xs={12}>
           <Post {...feedPost} />
         </Grid>
       ))}

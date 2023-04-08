@@ -4,8 +4,12 @@ import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Loader } from "../../components/ui/Loader/Loader";
 import { MinifiedUser } from "../../features/users/MinifiedUser";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
 
 export const Search = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const { search } = location;
   const {
@@ -20,7 +24,11 @@ export const Search = () => {
   }
 
   if (isError) {
-    throw new Error(error.message);
+    toast.error(error.message);
+    if (error.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+    return null;
   }
 
   if (!searchedUsers.length) {

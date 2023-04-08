@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { setUser } from "../../features/auth/authSlice";
+import { logout, setUser } from "../../features/auth/authSlice";
 import { useUpdateCurrentUserMutation } from "../../features/users/usersApiSlice";
 import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
 import { convertToBase64 } from "../../utils/convertToBase64";
@@ -35,6 +35,10 @@ export const EditUserForm = () => {
 
   if (isError) {
     toast.error(error.message);
+    if (error.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+    return null;
   }
 
   const { login, email, firstName, lastName } = user;

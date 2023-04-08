@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   useFollowUserMutation,
   useGetFollowersAndFollowingsQuery,
   useGetUserByIdQuery,
 } from "../../features/users/usersApiSlice";
+import { logout } from "../../features/auth/authSlice";
 
 import {
   Avatar,
@@ -25,6 +27,7 @@ import { Post } from "../../features/posts/Post";
 import { selectUser } from "../../features/auth/authSlice";
 
 export const User = () => {
+  const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
@@ -52,11 +55,21 @@ export const User = () => {
   }
 
   if (isError) {
-    throw new Error(error?.message);
+    toast.error(error.message);
+    if (error.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+
+    return null;
   }
 
   if (followersHaveError) {
-    throw new Error(followersError?.message);
+    toast.error(followersError?.message);
+    if (followersError.originalStatus.toString().startsWith("4")) {
+      dispatch(logout());
+    }
+
+    return null;
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
