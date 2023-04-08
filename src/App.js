@@ -4,7 +4,7 @@ import { theme } from "./contexts/theme";
 
 import "./App.css";
 import { AppRoutes } from "./routes/Routes";
-import ErrorBoundary from "./components/boundary/ErrorBoundary";
+import ErrorBoundary from "./ErrorBoundary";
 
 const App = () => {
   return (
