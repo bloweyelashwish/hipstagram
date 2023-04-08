@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Loader } from "../../components/ui/Loader/Loader";
-import { toast } from "react-toastify";
 import { MinifiedUser } from "../../features/users/MinifiedUser";
 
 export const Search = () => {

@@ -82,6 +82,7 @@ export const Registration = () => {
               message: "Password must contain at least 8 characters",
             },
           })}
+          type={"password"}
           label={"Your password"}
           error={!!errors?.password?.message}
           helperText={errors?.password?.message}
@@ -96,6 +97,7 @@ export const Registration = () => {
               return true;
             },
           })}
+          type={"password"}
           label={"Confirm your password"}
           error={!!errors?.confirmationPassword?.message}
           helperText={errors?.confirmationPassword?.message}

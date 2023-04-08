@@ -1,2 +1,4 @@
 export * from "./Feed";
-export * from "./User";
+export * from "./Profile";
+export * from "./Search";
+export * from "./ProfileSettings";
