@@ -1,23 +1,23 @@
 import { Box, ListItem, Typography, List } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Loader } from "../../components/ui/Loader/Loader";
 import { MinifiedUser } from "../../features/users/MinifiedUser";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
+import { selectCurrentSearchQuery } from "../../features/search/searchSlice";
 
 export const Search = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
-  const { search } = location;
+  const currentQuery = useSelector(selectCurrentSearchQuery);
+
   const {
     data: searchedUsers,
     isError,
     error,
     isLoading,
-  } = useGetUsersByLoginQuery(search.split("=")[1]);
+  } = useGetUsersByLoginQuery(currentQuery.trim().toLowerCase());
 
   if (isLoading) {
     return <Loader />;

@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import {
   logout,
   selectAuthLoadingState,
@@ -20,49 +19,38 @@ import {
   PersonOutlined,
   SearchOutlined,
 } from "@mui/icons-material";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
-  NavLink,
-  createSearchParams,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+  selectCurrentSearchQuery,
+  setQuery,
+} from "../../features/search/searchSlice";
+import { debounce } from "../../utils/helpers";
+import { useCallback } from "react";
 
 export const Header = () => {
   const currentUser = useSelector(selectUser);
-  const location = useLocation();
-  const [currentQuery, setCurrentQuery] = useState("");
+  const currentQuery = useSelector(selectCurrentSearchQuery);
+
   const navigate = useNavigate();
+  const location = useLocation();
   const loadingState = useSelector(selectAuthLoadingState);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (location.pathname.includes("search")) {
-      setCurrentQuery(location.search.split("=")[1]);
-    }
-  }, [location]);
 
   const logoutHandler = () => {
     dispatch(logout());
   };
 
-  function handleSearchSubmit() {
-    navigate({
-      pathname: "/search",
-      search: createSearchParams({
-        users: currentQuery.toLowerCase(),
-      }).toString(),
-    });
-  }
-
   const searchHandler = ({ target }) => {
-    setCurrentQuery(target.value);
-  };
-
-  const keyDownHandler = (event) => {
-    if (event.key === "Enter") {
-      handleSearchSubmit();
+    dispatch(setQuery(target.value));
+    if (!location.pathname.includes("search")) {
+      navigate({
+        pathname: "/search",
+      });
     }
   };
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const debouncedSearchHandler = useCallback(debounce(searchHandler), []);
 
   return (
     <Box
@@ -96,15 +84,13 @@ export const Header = () => {
             sx={{ p: "10px" }}
             aria-label="search"
             placeholder={"Search users"}
-            onClick={handleSearchSubmit}
           >
             <SearchOutlined sx={{ fontSize: "1.5rem" }} />
           </IconButton>
           <InputBase
             placeholder={"Search users"}
-            value={currentQuery}
-            onChange={searchHandler}
-            onKeyDown={keyDownHandler}
+            defaultValue={currentQuery}
+            onChange={debouncedSearchHandler}
           />
         </Paper>
         <Typography

@@ -3,7 +3,6 @@ export function debounce(fn, delay = 250) {
 
   return (...args) => {
     clearTimeout(timeout);
-
     timeout = setTimeout(() => {
       fn(...args);
     }, delay);

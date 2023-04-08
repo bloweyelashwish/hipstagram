@@ -3,10 +3,12 @@ import { authReducer } from "../features/auth/authSlice";
 import { apiService } from "./api/apiService";
 import { debounce } from "../utils/helpers";
 import { persistState, loadPersistedState } from "./persisted-store";
+import { searchReducer } from "../features/search/searchSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    search: searchReducer,
     [apiService.reducerPath]: apiService.reducer,
   },
   preloadedState: loadPersistedState(),
