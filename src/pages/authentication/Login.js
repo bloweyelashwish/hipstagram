@@ -28,7 +28,6 @@ export const Login = () => {
 
     if (user.data && user.data.access_token) {
       dispatch(setToken({ accessToken: user.data.access_token }));
-      localStorage.setItem(STORAGE_PREFIX + "token", user.data.access_token);
       setIsSuccess(true);
     }
   }
