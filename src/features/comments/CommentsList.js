@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../auth/authSlice";
 import { toast } from "react-toastify";
 import { useDeleteCommentByIdMutation } from "./commentsApiSlice";
+import { Link } from "react-router-dom";
 
 const Comment = ({ comment, onChange }) => {
   const currentUser = useSelector(selectUser);
@@ -55,12 +56,15 @@ const Comment = ({ comment, onChange }) => {
       key={`${comment.id}-${comment.owner.id}`}
       secondaryAction={commentActions()}
     >
-      <ListItemAvatar>
-        <Avatar
-          src={comment.owner.avatar}
-          sx={{ width: "40px", height: "40px" }}
-        />
-      </ListItemAvatar>
+      <Link to={`/user/${comment.owner.id}`}>
+        <ListItemAvatar>
+          <Avatar
+            src={comment.owner.avatar}
+            sx={{ width: "40px", height: "40px" }}
+          />
+        </ListItemAvatar>
+      </Link>
+
       <ListItemText primary={comment.owner.login} secondary={comment.text} />
     </ListItem>
   );
