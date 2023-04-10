@@ -7,6 +7,7 @@ import {
   useGetUserByIdQuery,
 } from "../../features/users/usersApiSlice";
 import { logout } from "../../features/auth/authSlice";
+import { apiService } from "../../app/api/apiService";
 
 import {
   Avatar,
@@ -31,7 +32,8 @@ export const User = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
-    params.id
+    params.id,
+    { refetchOnMountOrArgChange: true }
   );
   const [follow] = useFollowUserMutation();
   const currentUser = useSelector(selectUser);
@@ -41,6 +43,7 @@ export const User = () => {
     error: followersError,
     isLoading: followersAreLoading,
   } = useGetFollowersAndFollowingsQuery(params.id);
+  console.log(data);
 
   if (isLoading || followersAreLoading) {
     return (
@@ -73,17 +76,22 @@ export const User = () => {
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
-  const { followers: userFollowers } = followersAndFollowings;
+  console.log(followingsCount, followersCount);
+  const { followers: userFollowers, following: userFollowing } =
+    followersAndFollowings;
 
   const isOwnPage = currentUser.id === params.id;
-  const isFollowed = userFollowers.find((follower) => {
+  const isFollowed = !!userFollowers.find((follower) => {
     return follower.id === currentUser.id;
   });
 
   async function handleFollowButtonClick() {
+    apiService.util.invalidateTags("User");
     await follow(id);
     refetch();
   }
+
+  console.log(userFollowing);
 
   return (
     <Box>

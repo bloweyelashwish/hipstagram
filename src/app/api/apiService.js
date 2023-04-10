@@ -25,6 +25,7 @@ const baseQueryWithStatusCheck = async (args, api, extraOptions) => {
 
 export const apiService = createApi({
   reducerPath: "apiService",
+  keepUnusedDataFor: 5,
   baseQuery: baseQueryWithStatusCheck,
   tagTypes: ["Post", "User", "Feed", "Comment"],
   endpoints: () => ({}),

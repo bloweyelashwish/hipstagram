@@ -20,7 +20,7 @@ const usersApiService = apiService.injectEndpoints({
       query: (id) => ({
         url: `/users/follow/${id}`,
         method: "GET",
-        providesTags: ["User"],
+        invalidatesTags: ["User"],
       }),
     }),
     getFollowersAndFollowings: build.query({
@@ -35,12 +35,14 @@ const usersApiService = apiService.injectEndpoints({
         url: "/users/current",
         method: "PATCH",
         body: data,
+        invalidatesTags: ["User"],
       }),
     }),
     currentUser: build.query({
       query: () => ({
         url: "/users/current",
         method: "GET",
+        providesTags: ["User"],
       }),
     }),
   }),

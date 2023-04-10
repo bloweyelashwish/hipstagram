@@ -26,6 +26,7 @@ import {
 } from "../../features/search/searchSlice";
 import { debounce } from "../../utils/helpers";
 import { useCallback } from "react";
+import { apiService } from "../../app/api/apiService";
 
 export const Header = () => {
   const currentUser = useSelector(selectUser);
@@ -37,6 +38,7 @@ export const Header = () => {
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
+    dispatch(apiService.util.resetApiState());
     dispatch(logout());
   };
 
@@ -84,6 +86,7 @@ export const Header = () => {
             sx={{ p: "10px" }}
             aria-label="search"
             placeholder={"Search users"}
+            onClick={() => navigate({ pathname: "/search" })}
           >
             <SearchOutlined sx={{ fontSize: "1.5rem" }} />
           </IconButton>

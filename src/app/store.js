@@ -11,7 +11,11 @@ export const store = configureStore({
     search: searchReducer,
     [apiService.reducerPath]: apiService.reducer,
   },
-  preloadedState: loadPersistedState(),
+  preloadedState: {
+    auth: {
+      token: loadPersistedState().auth.token,
+    },
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiService.middleware),
 });

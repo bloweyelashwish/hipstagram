@@ -5,8 +5,9 @@ import { Loader } from "../../components/ui/Loader/Loader";
 import { useFollowUserMutation, useCurrentUserQuery } from "./usersApiSlice";
 import { useDispatch } from "react-redux";
 import { logout } from "../auth/authSlice";
+import { apiService } from "../../app/api/apiService";
 
-export const MinifiedUser = ({ _id, login, avatar }) => {
+export const MinifiedUser = ({ _id, login, avatar, onFollow }) => {
   const dispatch = useDispatch();
   const {
     data: currentUser,
@@ -36,6 +37,7 @@ export const MinifiedUser = ({ _id, login, avatar }) => {
     if (r.error) {
       toast.error(r.error.data);
     } else {
+      apiService.util.invalidateTags("User");
       refetch();
     }
   };
