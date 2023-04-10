@@ -42,6 +42,7 @@ export const User = () => {
     isError: followersHaveError,
     error: followersError,
     isLoading: followersAreLoading,
+    refetch: refetchFollowers,
   } = useGetFollowersAndFollowingsQuery(params.id);
   console.log(data);
 
@@ -76,7 +77,6 @@ export const User = () => {
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
-  console.log(followingsCount, followersCount);
   const { followers: userFollowers, following: userFollowing } =
     followersAndFollowings;
 
@@ -86,9 +86,13 @@ export const User = () => {
   });
 
   async function handleFollowButtonClick() {
-    apiService.util.invalidateTags("User");
-    await follow(id);
-    refetch();
+    const r = await follow(id);
+    if (r.error) {
+      toast.error(r.error.data);
+    } else {
+      refetch();
+      refetchFollowers();
+    }
   }
 
   console.log(userFollowing);
