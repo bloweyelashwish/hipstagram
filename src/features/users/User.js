@@ -209,12 +209,12 @@ export const User = () => {
             <SentimentDissatisfiedOutlined sx={{ fontSize: "3rem" }} />
           </Box>
         )}
-        {!!posts.length && (
+        {posts.length > 0 && (
           <Grid container spacing={2} columns={{ xs: 12 }}>
             {posts.map((post) => {
               return (
                 <Grid item xs={6} key={post._id}>
-                  <Post {...post} />
+                  <Post {...post} isOwnPost={isOwnPage} />
                 </Grid>
               );
             })}

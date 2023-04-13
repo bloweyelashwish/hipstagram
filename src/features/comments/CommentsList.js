@@ -22,7 +22,7 @@ import {
 } from "./commentsApiSlice";
 import { nanoid } from "@reduxjs/toolkit";
 
-const Comment = ({ comment, onChange }) => {
+const Comment = ({ comment, onChange, onNavigate }) => {
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const navigate = useNavigate();
   const currentUser = useSelector(selectUser);
@@ -62,6 +62,11 @@ const Comment = ({ comment, onChange }) => {
     setIsBeingEdited(false);
   };
 
+  const handleAvatarClick = () => {
+    onNavigate();
+    navigate({ pathname: `/user/${comment.owner.id}` })
+  }
+
   const commentActions = () => {
     if (isOwnComment) {
       return (
@@ -89,12 +94,6 @@ const Comment = ({ comment, onChange }) => {
         </Box>
       );
     }
-
-    return (
-      <IconButton onClick={commentRemovalHandler}>
-        <DeleteForever />
-      </IconButton>
-    );
   };
 
   return (
@@ -104,8 +103,8 @@ const Comment = ({ comment, onChange }) => {
       secondaryAction={commentActions()}
     >
       <ListItemAvatar
-        onClick={() => navigate({ pathname: `/user/${comment.owner.id}` })}
-        sx={{ width: "50px", height: "50px" }}
+        onClick={handleAvatarClick}
+        sx={{ width: "50px", height: "50px", cursor: 'pointer' }}
       >
         <Avatar src={comment.owner.avatar} />
       </ListItemAvatar>
@@ -128,11 +127,11 @@ const Comment = ({ comment, onChange }) => {
   );
 };
 
-export const CommentsList = ({ list, onChange }) => {
+export const CommentsList = ({ list, onChange, onNavigate }) => {
   return (
     <List>
       {list.map((item) => (
-        <Comment comment={item} onChange={onChange} key={nanoid()} />
+        <Comment comment={item} onChange={onChange} key={nanoid()} onNavigate={onNavigate} />
       ))}
     </List>
   );

@@ -1,5 +1,4 @@
 import {
-  useGetFollowersAndFollowingsQuery,
   useGetUserByIdQuery,
 } from "../users/usersApiSlice";
 import {
@@ -24,7 +23,7 @@ import {
 } from "@mui/material";
 import { logout } from "../auth/authSlice";
 
-export const PostModal = ({ post, onLike }) => {
+export const PostModal = ({ post, onLike, onNavigate }) => {
   const dispatch = useDispatch();
   const {
     data: userData,
@@ -39,19 +38,13 @@ export const PostModal = ({ post, onLike }) => {
     isError: commentsHaveError,
     refetch: refetchComments,
   } = useGetCommentsByPostIdQuery(post._id);
-  const {
-    data: followersData,
-    isLoading: followersLoading,
-    error: followersError,
-    isError: followersHaveError,
-  } = useGetFollowersAndFollowingsQuery(post.ownerId);
   const currentUser = useSelector(selectUser);
 
   const [createComment, { isLoading: newCommentLoading }] =
     useCreateCommentMutation();
   const { register, handleSubmit, reset } = useForm();
 
-  if (userLoading || commentsLoading || followersLoading) {
+  if (userLoading || commentsLoading) {
     return <Loader />;
   }
 
@@ -73,15 +66,6 @@ export const PostModal = ({ post, onLike }) => {
     return null;
   }
 
-  if (followersHaveError) {
-    toast.error(followersError?.message);
-    if (commentsError?.originalStatus.toString().startsWith("4")) {
-      dispatch(logout());
-    }
-
-    return null;
-  }
-
   const newCommentHandler = async (data) => {
     const r = await createComment({ text: data.text, postId: post._id });
     if (r.error) {
@@ -94,10 +78,6 @@ export const PostModal = ({ post, onLike }) => {
   };
 
   const { login, avatar } = userData;
-  const { followers } = followersData;
-  const isFollowed = followers.find(
-    (follower) => follower.id === currentUser.id
-  );
 
   const { likes } = post;
   const isLiked = !!likes.find((like) => like._id === currentUser.id);
@@ -157,7 +137,7 @@ export const PostModal = ({ post, onLike }) => {
               component={"span"}
               sx={{
                 fontSize: "1rem",
-                paddingInline: "15px",
+                paddingInline: "0 15px",
                 color: "#000",
                 fontWeight: 300,
               }}
@@ -165,19 +145,6 @@ export const PostModal = ({ post, onLike }) => {
               {post.title}
             </Typography>
           </Typography>
-
-          {currentUser.id !== post.ownerId && !isFollowed && (
-            <Button
-              sx={{
-                fontSize: "14px",
-                fontWeight: 700,
-                textTransform: "capitalize",
-                marginLeft: "auto",
-              }}
-            >
-              Follow
-            </Button>
-          )}
         </Box>
         <Box
           flexGrow={1}
@@ -193,6 +160,7 @@ export const PostModal = ({ post, onLike }) => {
             <CommentsList
               list={commentsData}
               onChange={() => refetchComments()}
+              onNavigate={onNavigate}
             />
           ) : (
             <Typography

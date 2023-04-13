@@ -30,7 +30,7 @@ export const Search = () => {
     return (
       <Stack spacing={2} paddingX={10} paddingY={2}>
         {[...Array(20).keys()].map(() => (
-          <Skeleton width={950} height={80} key={nanoid()} />
+          <Skeleton width={'100%'} height={80} key={nanoid()} />
         ))}
       </Stack>
     );

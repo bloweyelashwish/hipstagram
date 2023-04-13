@@ -84,7 +84,7 @@ export const Post = ({ _id }) => {
           maxWidth={"lg"}
           fullWidth={true}
         >
-          <PostModal post={{ ...data }} onLike={postLikeHandler} />
+          <PostModal post={{ ...data }} onLike={postLikeHandler} onNavigate={() => setPostOpen(false)}/>
         </Dialog>
       </Box>
     </Box>
