@@ -15,7 +15,7 @@ export const Feed = () => {
     return (
       <Stack spacing={2} paddingX={10}>
         {[...Array(20).keys()].map(() => (
-          <Skeleton width={900} height={500} key={nanoid()} />
+          <Skeleton width={'100%'} height={500} key={nanoid()} />
         ))}
       </Stack>
     );
