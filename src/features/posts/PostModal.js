@@ -46,7 +46,7 @@ export const PostModal = ({ post, onLike }) => {
   } = useGetFollowersAndFollowingsQuery(post.ownerId);
   const currentUser = useSelector(selectUser);
 
-  const [createComment] = useCreateCommentMutation();
+  const [createComment, { isLoading }] = useCreateCommentMutation();
   const { register, handleSubmit, reset } = useForm();
 
   if (userLoading || commentsLoading || followersLoading) {

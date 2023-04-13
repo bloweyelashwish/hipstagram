@@ -44,7 +44,6 @@ export const User = () => {
     isLoading: followersAreLoading,
     refetch: refetchFollowers,
   } = useGetFollowersAndFollowingsQuery(params.id);
-  console.log(data);
 
   if (isLoading || followersAreLoading) {
     return (
@@ -94,8 +93,6 @@ export const User = () => {
       refetchFollowers();
     }
   }
-
-  console.log(userFollowing);
 
   return (
     <Box>
