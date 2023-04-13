@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { logout, setUser } from "../../features/auth/authSlice";
 import { useUpdateCurrentUserMutation } from "../../features/users/usersApiSlice";
 import { useCurrentUserQuery } from "../../features/users/usersApiSlice";
-import { convertToBase64 } from "../../utils/convertToBase64";
+import { convertToBase64 } from "../../utils";
 
 export const EditUserForm = () => {
   const [stateAvatar, setStateAvatar] = useState();

@@ -24,7 +24,7 @@ import {
   selectCurrentSearchQuery,
   setQuery,
 } from "../../features/search/searchSlice";
-import { debounce } from "../../utils/helpers";
+import { debounce } from "../../utils";
 import { useCallback } from "react";
 import { apiService } from "../../app/api/apiService";
 
