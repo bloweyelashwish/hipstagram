@@ -16,7 +16,11 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithStatusCheck = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
-  if (result?.error) {
+
+  if (
+    result?.error &&
+    result?.error?.originalStatus?.toString().startsWith("4")
+  ) {
     toast.error("An error has occured.");
     api.dispatch(logout());
   }

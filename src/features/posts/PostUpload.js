@@ -33,6 +33,7 @@ export const PostUpload = ({ onUpload, ...props }) => {
     DTO.set("image", imageFile);
 
     const r = await uploadPost(DTO);
+    console.log(r);
 
     if (r.error) {
       toast.error(r.error.data);

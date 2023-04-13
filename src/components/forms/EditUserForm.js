@@ -56,7 +56,7 @@ export const EditUserForm = () => {
   }
 
   async function handleAvatarChange({ target }) {
-    let newAvatar = "";
+    let newAvatar = user.avatar ?? "";
     try {
       newAvatar = await convertToBase64(target.files[0]);
       setStateAvatar(newAvatar);
