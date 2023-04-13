@@ -7,7 +7,6 @@ import {
   useGetUserByIdQuery,
 } from "../../features/users/usersApiSlice";
 import { logout } from "../../features/auth/authSlice";
-import { apiService } from "../../app/api/apiService";
 
 import {
   Avatar,
@@ -76,8 +75,7 @@ export const User = () => {
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
-  const { followers: userFollowers, following: userFollowing } =
-    followersAndFollowings;
+  const { followers: userFollowers } = followersAndFollowings;
 
   const isOwnPage = currentUser.id === params.id;
   const isFollowed = !!userFollowers.find((follower) => {

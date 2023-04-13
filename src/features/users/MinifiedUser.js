@@ -1,7 +1,6 @@
 import { Avatar, Box, Button, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Loader } from "../../components/ui/Loader/Loader";
 import { useFollowUserMutation, useCurrentUserQuery } from "./usersApiSlice";
 import { useDispatch } from "react-redux";
 import { logout } from "../auth/authSlice";

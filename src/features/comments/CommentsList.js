@@ -1,24 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   List,
   ListItem,
   ListItemAvatar,
   Avatar,
-  ListItemText,
   IconButton,
   Box,
+  Typography,
+  Button,
+  TextField,
 } from "@mui/material";
-import { Edit, DeleteForever } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { Edit, DeleteForever, Cancel } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectUser } from "../auth/authSlice";
 import { toast } from "react-toastify";
-import { useDeleteCommentByIdMutation } from "./commentsApiSlice";
-import { Link } from "react-router-dom";
+import {
+  useDeleteCommentByIdMutation,
+  useEditCommentByIdMutation,
+} from "./commentsApiSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 const Comment = ({ comment, onChange }) => {
+  const [isBeingEdited, setIsBeingEdited] = useState(false);
+  const navigate = useNavigate();
   const currentUser = useSelector(selectUser);
+  const [deleteComment, { isLoading }] = useDeleteCommentByIdMutation();
+  const [editComment] = useEditCommentByIdMutation();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
   const isOwnComment = currentUser.id === comment.owner.id;
-  const [deleteComment] = useDeleteCommentByIdMutation();
 
   const commentRemovalHandler = async () => {
     const r = await deleteComment(comment.id);
@@ -29,43 +46,84 @@ const Comment = ({ comment, onChange }) => {
     }
   };
 
+  const commentEditHandler = () => {
+    setIsBeingEdited(true);
+  };
+
+  const updateCommentHandler = async (data) => {
+    const r = await editComment(comment.id, data);
+
+    if (r.error) {
+      toast.error("Unable to edit comment. Try again later.");
+    } else {
+      onChange();
+    }
+
+    setIsBeingEdited(false);
+  };
+
   const commentActions = () => {
     if (isOwnComment) {
       return (
         <Box display={"flex"} alignItems={"center"}>
-          <IconButton>
-            <Edit />
-          </IconButton>
-          <IconButton onClick={commentRemovalHandler}>
-            <DeleteForever />
-          </IconButton>
+          {isBeingEdited ? (
+            <Box
+              component={"form"}
+              onSubmit={handleSubmit(updateCommentHandler)}
+            >
+              <Button type={"submit"}>Save</Button>
+              <IconButton onClick={() => setIsBeingEdited(false)}>
+                <Cancel />
+              </IconButton>
+            </Box>
+          ) : (
+            <>
+              <IconButton onClick={commentEditHandler} disabled={isLoading}>
+                <Edit />
+              </IconButton>
+              <IconButton onClick={commentRemovalHandler} disabled={isLoading}>
+                <DeleteForever />
+              </IconButton>
+            </>
+          )}
         </Box>
       );
-    } else {
-      return (
-        <IconButton onClick={commentRemovalHandler}>
-          <DeleteForever />
-        </IconButton>
-      );
     }
+
+    return (
+      <IconButton onClick={commentRemovalHandler}>
+        <DeleteForever />
+      </IconButton>
+    );
   };
 
   return (
     <ListItem
-      alignItems="flex-start"
+      alignItems="center"
       key={`${comment.id}-${comment.owner.id}`}
       secondaryAction={commentActions()}
     >
-      <Link to={`/user/${comment.owner.id}`}>
-        <ListItemAvatar>
-          <Avatar
-            src={comment.owner.avatar}
-            sx={{ width: "40px", height: "40px" }}
+      <ListItemAvatar
+        onClick={() => navigate({ pathname: `/user/${comment.owner.id}` })}
+        sx={{ width: "50px", height: "50px" }}
+      >
+        <Avatar src={comment.owner.avatar} />
+      </ListItemAvatar>
+      <Box>
+        <Typography fontWeight={600}>{comment.owner.login}</Typography>
+        {isBeingEdited ? (
+          <TextField
+            {...register("text", { minLength: 1, maxLength: 20 })}
+            defaultValue={comment.text}
+            autoFocus
+            error={!!errors?.text}
+            helperText={errors?.text?.message}
+            sx={{ padding: 0, maxWidth: "50ch" }}
           />
-        </ListItemAvatar>
-      </Link>
-
-      <ListItemText primary={comment.owner.login} secondary={comment.text} />
+        ) : (
+          <Typography>{comment.text}</Typography>
+        )}
+      </Box>
     </ListItem>
   );
 };
@@ -74,7 +132,7 @@ export const CommentsList = ({ list, onChange }) => {
   return (
     <List>
       {list.map((item) => (
-        <Comment comment={item} onChange={onChange} />
+        <Comment comment={item} onChange={onChange} key={nanoid()} />
       ))}
     </List>
   );

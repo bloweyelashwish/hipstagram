@@ -20,6 +20,7 @@ import {
   Typography,
   IconButton,
   InputBase,
+  CircularProgress,
 } from "@mui/material";
 import { logout } from "../auth/authSlice";
 
@@ -46,7 +47,8 @@ export const PostModal = ({ post, onLike }) => {
   } = useGetFollowersAndFollowingsQuery(post.ownerId);
   const currentUser = useSelector(selectUser);
 
-  const [createComment, { isLoading }] = useCreateCommentMutation();
+  const [createComment, { isLoading: newCommentLoading }] =
+    useCreateCommentMutation();
   const { register, handleSubmit, reset } = useForm();
 
   if (userLoading || commentsLoading || followersLoading) {
@@ -246,9 +248,15 @@ export const PostModal = ({ post, onLike }) => {
               fullWidth
               variant="standard"
             />
-            <Button sx={{ fontWeight: 700 }} type={"submit"}>
-              Send
-            </Button>
+            {newCommentLoading ? (
+              <Box padding={1}>
+                <CircularProgress size={"1rem"} sx={{ color: "#1976d2" }} />
+              </Box>
+            ) : (
+              <Button sx={{ fontWeight: 700 }} type={"submit"}>
+                Send
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>

@@ -20,7 +20,15 @@ const commentsApiSlice = apiService.injectEndpoints({
       query: (id) => ({
         url: `/comments/${id}`,
         method: "DELETE",
-        providesTags: ["Comment"],
+        invalidatesTags: ["Comment"],
+      }),
+    }),
+    editCommentById: build.mutation({
+      query: (id, data) => ({
+        url: `/comments/${id}`,
+        method: "PATCH",
+        body: data,
+        invalidatesTags: ["Comment"],
       }),
     }),
   }),
@@ -30,4 +38,5 @@ export const {
   useGetCommentsByPostIdQuery,
   useCreateCommentMutation,
   useDeleteCommentByIdMutation,
+  useEditCommentByIdMutation,
 } = commentsApiSlice;
