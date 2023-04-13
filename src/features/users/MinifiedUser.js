@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader } from "../../components/ui/Loader/Loader";
@@ -20,7 +20,7 @@ export const MinifiedUser = ({ _id, login, avatar, onFollow }) => {
   const [follow, { isLoading: followLoading }] = useFollowUserMutation();
 
   if (isLoading) {
-    return <Loader />;
+    return <Skeleton height={70} width={900} />;
   }
   if (isError) {
     toast.error(error.message);
