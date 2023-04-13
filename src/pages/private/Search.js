@@ -1,12 +1,19 @@
-import { Box, ListItem, Typography, List } from "@mui/material";
+import {
+  Box,
+  ListItem,
+  Typography,
+  List,
+  Stack,
+  Skeleton,
+} from "@mui/material";
 import { useGetUsersByLoginQuery } from "../../features/users/usersApiSlice";
 import errorImg from "../../assets/error.svg";
-import { Loader } from "../../components/ui/Loader/Loader";
 import { MinifiedUser } from "../../features/users/MinifiedUser";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { selectCurrentSearchQuery } from "../../features/search/searchSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 export const Search = () => {
   const dispatch = useDispatch();
@@ -20,7 +27,13 @@ export const Search = () => {
   } = useGetUsersByLoginQuery(currentQuery.trim().toLowerCase());
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <Stack spacing={2} paddingX={10} paddingY={2}>
+        {[...Array(20).keys()].map(() => (
+          <Skeleton width={950} height={80} key={nanoid()} />
+        ))}
+      </Stack>
+    );
   }
 
   if (isError) {

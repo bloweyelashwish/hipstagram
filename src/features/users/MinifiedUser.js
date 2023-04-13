@@ -6,6 +6,7 @@ import { useFollowUserMutation, useCurrentUserQuery } from "./usersApiSlice";
 import { useDispatch } from "react-redux";
 import { logout } from "../auth/authSlice";
 import { apiService } from "../../app/api/apiService";
+import { CircularProgress } from "@mui/material";
 
 export const MinifiedUser = ({ _id, login, avatar, onFollow }) => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const MinifiedUser = ({ _id, login, avatar, onFollow }) => {
     error,
     refetch,
   } = useCurrentUserQuery();
-  const [follow] = useFollowUserMutation();
+  const [follow, { isLoading: followLoading }] = useFollowUserMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -73,11 +74,16 @@ export const MinifiedUser = ({ _id, login, avatar, onFollow }) => {
           {login ?? "Unable to load user"}
         </Typography>
       </Link>
-      {_id !== currentUser.id && (
-        <Button sx={{ marginLeft: "auto" }} onClick={followHandler}>
-          {isFollowed ? "Unfollow" : "Follow"}
-        </Button>
-      )}
+      {_id !== currentUser.id &&
+        (followLoading ? (
+          <Box marginLeft={"auto"}>
+            <CircularProgress size={"1.35rem"} sx={{ color: "#1976d2" }} />
+          </Box>
+        ) : (
+          <Button sx={{ marginLeft: "auto" }} onClick={followHandler}>
+            {isFollowed ? "Unfollow" : "Follow"}
+          </Button>
+        ))}
     </Box>
   );
 };

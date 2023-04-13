@@ -1,18 +1,24 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import { useGetFeedQuery } from "../../features/posts/postsApiSlice";
 import errorImg from "../../assets/error.svg";
 import { Post } from "../../features/posts/Post";
-import { Loader } from "../../components/ui/Loader/Loader";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 export const Feed = () => {
   const dispatch = useDispatch();
   const { data: feedData, isError, isLoading, error } = useGetFeedQuery();
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <Stack spacing={2} paddingX={10}>
+        {[...Array(20).keys()].map(() => (
+          <Skeleton width={900} height={500} key={nanoid()} />
+        ))}
+      </Stack>
+    );
   }
 
   if (isError) {
