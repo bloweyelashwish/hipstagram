@@ -105,6 +105,7 @@ export const EditUserForm = () => {
               <input
                 type={"file"}
                 hidden
+                accept="image/*"
                 {...register("avatar")}
                 onChange={handleAvatarChange}
               />
