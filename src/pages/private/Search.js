@@ -38,7 +38,7 @@ export const Search = () => {
 
   if (isError) {
     toast.error(error.message);
-    if (error.data?.status.toString().startsWith("4")) {
+    if (error.data?.status?.toString().startsWith("4")) {
       dispatch(logout());
     }
     return null;

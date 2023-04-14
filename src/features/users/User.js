@@ -26,11 +26,9 @@ import {
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
 import { selectUser } from "../../features/auth/authSlice";
-import { useState } from "react";
 
 export const User = () => {
   const dispatch = useDispatch();
-  const [errorPage, setErrorPage] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
