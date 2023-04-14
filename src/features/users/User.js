@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -17,6 +17,7 @@ import {
   Button,
   Grid,
   IconButton,
+  SvgIcon,
 } from "@mui/material";
 import {
   SettingsOutlined,
@@ -25,9 +26,11 @@ import {
 import { PostUpload } from "../../features/posts/PostUpload";
 import { Post } from "../../features/posts/Post";
 import { selectUser } from "../../features/auth/authSlice";
+import { useState } from "react";
 
 export const User = () => {
   const dispatch = useDispatch();
+  const [errorPage, setErrorPage] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch, error } = useGetUserByIdQuery(
@@ -57,30 +60,56 @@ export const User = () => {
   }
 
   if (isError) {
-    toast.error(error.message);
-    if (error.originalStatus.toString().startsWith("4")) {
+    if (error.data?.status?.toString().startsWith("4")) {
       dispatch(logout());
+    } else {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            rowGap: "1rem",
+          }}
+          paddingX={10}
+          paddingY={15}
+        >
+          <SvgIcon sx={{ fontSize: "3rem" }}>
+            <SentimentDissatisfiedOutlined />
+          </SvgIcon>
+          <Typography variant="h3" component={"h1"}>
+            User was not found.
+          </Typography>
+          <Button
+            component={"a"}
+            onClick={() => navigate({ pathname: "/feed" })}
+          >
+            Return to feed
+          </Button>
+        </Box>
+      );
     }
 
-    return null;
+    return;
   }
 
   if (followersHaveError) {
-    toast.error(followersError?.message);
-    if (followersError.originalStatus.toString().startsWith("4")) {
+    if (followersError.data?.status?.toString().startsWith("4")) {
       dispatch(logout());
     }
-
-    return null;
   }
 
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
-  const { followers: userFollowers } = followersAndFollowings;
+  const { followers: userFollowers = [] } = followersAndFollowings;
 
   const isOwnPage = currentUser.id === params.id;
-  const isFollowed = !!userFollowers.find((follower) => {
-    return follower.id === currentUser.id;
-  });
+  const isFollowed =
+    userFollowers.length > 0
+      ? !!userFollowers.find((follower) => {
+          return follower.id === currentUser.id;
+        })
+      : false;
 
   async function handleFollowButtonClick() {
     const r = await follow(id);
