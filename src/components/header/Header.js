@@ -52,7 +52,7 @@ export const Header = () => {
   };
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  const debouncedSearchHandler = useCallback(debounce(searchHandler), []);
+  const debouncedSearchHandler = useCallback(debounce(searchHandler), []  );
 
   return (
     <Box

@@ -83,6 +83,7 @@ export const Login = () => {
               message: "Login must consist only of letters and numbers",
             },
           })}
+          type="password"
           label={"Your password"}
           error={!!errors?.password?.message}
           helperText={errors?.password?.message}
