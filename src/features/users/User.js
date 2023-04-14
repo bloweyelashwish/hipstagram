@@ -100,8 +100,11 @@ export const User = () => {
     }
   }
 
+  //
   const { posts, followersCount, followingsCount, login, id, avatar } = data;
-  const { followers: userFollowers = [] } = followersAndFollowings;
+  const { followers: userFollowers } = followersAndFollowings ?? {
+    followers: [],
+  };
 
   const isOwnPage = currentUser.id === params.id;
   const isFollowed =
