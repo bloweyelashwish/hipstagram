@@ -15,7 +15,7 @@ export const Feed = () => {
     return (
       <Stack spacing={2} paddingX={10}>
         {[...Array(20).keys()].map(() => (
-          <Skeleton width={'100%'} height={500} key={nanoid()} />
+          <Skeleton width={"100%"} height={500} key={nanoid()} />
         ))}
       </Stack>
     );
@@ -23,7 +23,7 @@ export const Feed = () => {
 
   if (isError) {
     toast.error(error?.message);
-    if (error.originalStatus.toString().startsWith("4")) {
+    if (error.data?.status.toString().startsWith("4")) {
       dispatch(logout());
     }
 

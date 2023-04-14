@@ -30,7 +30,7 @@ export const Search = () => {
     return (
       <Stack spacing={2} paddingX={10} paddingY={2}>
         {[...Array(20).keys()].map(() => (
-          <Skeleton width={'100%'} height={80} key={nanoid()} />
+          <Skeleton width={"100%"} height={80} key={nanoid()} />
         ))}
       </Stack>
     );
@@ -38,7 +38,7 @@ export const Search = () => {
 
   if (isError) {
     toast.error(error.message);
-    if (error.originalStatus.toString().startsWith("4")) {
+    if (error.data?.status.toString().startsWith("4")) {
       dispatch(logout());
     }
     return null;
